@@ -1,0 +1,1576 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#F7F6FC">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="English Champion">
+<title>English Champion</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#F7F6FC;--ink:#1A1438;--muted:#5B5679;--line:#E7E4F3;--violet:#5B3DF5;--vink:#4B2FE0;--lilac:#ECE8FF;--coral:#FF6B4A;--gold:#E9B949;--ok:#1C7A4A;--okbg:#DDF5E8;--ko:#B42318;--kobg:#FFE4E0}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:'Outfit',system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased}
+button,input{font-family:inherit;color:inherit}
+button{cursor:pointer;border:0;background:none;padding:0}
+button:disabled{opacity:.45;cursor:not-allowed}
+#app{max-width:460px;margin:0 auto;min-height:100vh;min-height:100dvh;display:flex;flex-direction:column;position:relative}
+.screen{flex:1;display:flex;flex-direction:column;gap:16px;padding:calc(20px + env(safe-area-inset-top)) 20px 24px}
+.screen.withnav{padding-bottom:110px}
+.screen.dark{background:var(--ink);color:#fff}
+.row{display:flex;align-items:center;gap:10px}
+.between{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.grow{flex:1}
+.eyebrow{font-size:13px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+.dark .eyebrow{color:#B9B1E8}
+.h1{font-size:26px;font-weight:800;letter-spacing:-.02em;line-height:1.15;margin:0}
+.h2{font-size:19px;font-weight:700;margin:0}
+.muted{color:var(--muted)}
+.small{font-size:13px}
+.card{background:#fff;border:1px solid var(--line);border-radius:22px;padding:18px;display:flex;flex-direction:column;gap:12px}
+.pill{display:inline-flex;align-items:center;gap:5px;border-radius:99px;padding:7px 11px;font-weight:700;font-size:14px;white-space:nowrap}
+.pill.flame{background:#FFE9E2;color:#8A2A12}.pill.coin{background:#FFF4D6;color:#6B4A00}
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;min-height:54px;border-radius:16px;font-size:17px;font-weight:700;padding:0 16px;transition:transform .08s}
+.btn:active:not(:disabled){transform:scale(.98)}
+.btn.dark{background:var(--ink);color:#fff}.btn.violet{background:var(--violet);color:#fff}.btn.coral{background:var(--coral);color:var(--ink)}
+.btn.light{background:#fff;border:1px solid #D8D3EA;color:var(--ink)}
+.dark .btn.light{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.2);color:#fff}
+.iconbtn{width:44px;height:44px;border-radius:14px;background:#fff;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--ink)}
+.dark .iconbtn{background:rgba(255,255,255,.08);border-color:transparent;color:#fff}
+.sound{width:56px;height:56px;border-radius:18px;background:var(--violet);color:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sound.sm{width:46px;height:46px;border-radius:14px}
+.bar{height:10px;background:#E4E0F2;border-radius:99px;overflow:hidden}.bar i{display:block;height:100%;background:var(--violet);border-radius:99px;transition:width .3s}
+.dark .bar{background:rgba(255,255,255,.14)}.dark .bar i{background:var(--coral)}
+.step{display:flex;align-items:center;gap:12px}
+.dot{width:32px;height:32px;border-radius:99px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-weight:800;font-size:14px}
+.dot.done{background:var(--okbg);color:var(--ok)}.dot.cur{background:var(--lilac);color:var(--vink)}.dot.todo{background:#F0EFF5;color:#6E6A86}
+.medal{width:44px;height:44px;border-radius:99px;box-sizing:border-box;flex-shrink:0}
+.m0{background:#EEECF5;border:3px dashed #D3CFE4}.m1{background:#C98A5B;border:4px solid #EBC9AE}.m2{background:#B9BFCC;border:4px solid #E1E4EA}.m3{background:#E9B949;border:4px solid #F7DD94}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.opt{width:100%;min-height:58px;border-radius:16px;background:#fff;border:2px solid var(--line);font-size:19px;font-weight:600;text-align:left;padding:12px 16px;display:flex;align-items:center;gap:10px}
+.dark .opt{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.14);color:#fff}
+.opt.ok{background:var(--okbg);border-color:var(--ok);color:var(--ok)}.opt.ko{background:var(--kobg);border-color:var(--ko);color:var(--ko)}
+.tiles{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
+.tile{min-height:50px;padding:0 16px;border-radius:14px;background:var(--lilac);color:var(--ink);font-size:19px;font-weight:700;box-shadow:0 4px 0 #8D7BE8}
+.tile.in{background:#fff;box-shadow:0 4px 0 #C9C2EE}
+.tile.used{visibility:hidden}
+.answer{min-height:122px;border-radius:20px;border:2px dashed rgba(255,255,255,.22);background:rgba(255,255,255,.04);padding:14px;display:flex;flex-wrap:wrap;gap:10px;align-content:flex-start}
+.answer.light{border-color:#CFC8EA;background:#fff}
+.letter{width:44px;min-height:50px;padding:0}
+.prompt{font-size:22px;font-weight:700;line-height:1.3}
+.sentence{font-size:21px;font-weight:600;line-height:1.45}
+.blank{display:inline-block;min-width:70px;border-bottom:3px solid var(--coral);text-align:center;color:var(--coral)}
+.feedback{border-radius:20px;padding:16px;display:flex;flex-direction:column;gap:10px;animation:up .2s ease}
+.feedback.ok{background:var(--okbg);color:#0F4D2E}.feedback.ko{background:var(--kobg);color:#7A1A10}
+.feedback .t{font-size:19px;font-weight:800}
+@keyframes up{from{transform:translateY(12px);opacity:0}to{transform:none;opacity:1}}
+@keyframes pop{0%{transform:scale(.6);opacity:0}70%{transform:scale(1.08)}100%{transform:scale(1);opacity:1}}
+.pop{animation:pop .35s ease}
+nav.tabs{position:fixed;left:0;right:0;bottom:0;max-width:460px;margin:0 auto;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));background:#fff;border-top:1px solid var(--line);padding:6px 8px calc(10px + env(safe-area-inset-bottom));z-index:5}
+nav.tabs button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;min-height:50px;color:var(--muted);font-size:12px;font-weight:600}
+nav.tabs button.on{color:var(--vink);font-weight:800}
+.list{display:flex;flex-direction:column;gap:10px}
+.item{background:#fff;border:1px solid var(--line);border-radius:18px;padding:14px;display:flex;align-items:center;gap:12px;text-align:left;width:100%}
+.item.locked{background:#F0EFF5}
+.badge{width:46px;height:46px;border-radius:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-weight:800}
+.gloss{background:var(--lilac);color:var(--vink);font-weight:700;border-radius:6px;padding:0 3px;cursor:pointer}
+.storytext{font-size:19px;line-height:1.6}
+.toast{position:fixed;left:50%;bottom:calc(96px + env(safe-area-inset-bottom));transform:translateX(-50%);background:var(--ink);color:#fff;padding:12px 18px;border-radius:14px;font-weight:600;font-size:15px;box-shadow:0 10px 30px rgba(26,20,56,.3);z-index:20;max-width:88%;text-align:center;animation:up .2s ease}
+.shopitem{background:#fff;border:2px solid var(--line);border-radius:20px;padding:10px;display:flex;flex-direction:column;gap:6px;text-align:left}
+.shopitem.sel{border-color:var(--violet)}
+.shopitem .swatch{height:84px;border-radius:14px;display:flex;align-items:center;justify-content:center}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{min-height:40px;padding:0 14px;border-radius:99px;border:1px solid #D8D3EA;background:#fff;font-size:14px;font-weight:600}
+.chip.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+input.field{width:100%;min-height:56px;border-radius:16px;border:2px solid #D8D3EA;padding:0 16px;font-size:19px;background:#fff}
+input.field:focus{outline:none;border-color:var(--violet)}
+.bigword{font-size:46px;font-weight:800;letter-spacing:-.03em;line-height:1.05;word-break:break-word}
+.hero{border-radius:20px;height:170px;display:flex;align-items:center;justify-content:center}
+.timer{font-size:44px;font-weight:800;letter-spacing:-.03em}
+.bars14{display:grid;grid-template-columns:repeat(14,minmax(0,1fr));gap:5px;align-items:end;height:90px}
+.bars14 div{background:var(--violet);border-radius:4px 4px 2px 2px;min-height:3px}
+.bars14 div.zero{background:#E4E0F2}
+@media (min-width:600px){#app{border-left:1px solid var(--line);border-right:1px solid var(--line)}}
+</style>
+</head>
+<body>
+<div id="app"><div class="screen" style="justify-content:center;text-align:center;gap:14px">
+<h1 class="h1">English Champion</h1>
+<p class="muted" style="font-size:17px;margin:0">Si ce message reste affiché, l'application n'a pas pu démarrer.</p>
+<p style="font-size:16px;margin:0">Sur iPhone, elle ne fonctionne pas dans l'aperçu d'un fichier reçu par Messages, Mail, WhatsApp ou Fichiers. Ouvre-la depuis son adresse web (flauder.github.io/English) dans Safari, puis Partager › « Sur l'écran d'accueil ».</p>
+</div></div>
+<script>
+/* affiche toute erreur à l'écran au lieu d'une page blanche */
+window.__showErr=function(msg){try{var a=document.getElementById("app");if(!a)return;var d=document.createElement("div");d.style.cssText="margin:16px;padding:14px;border-radius:14px;background:#FFE4E0;color:#7A1A10;font:14px system-ui;word-break:break-word";d.textContent="Erreur de l'application (envoie ce message) : "+msg;a.insertBefore(d,a.firstChild)}catch(e){}};
+window.onerror=function(m,src,l,c){window.__showErr(m+" (ligne "+l+":"+c+")")};
+window.addEventListener("unhandledrejection",function(e){window.__showErr(String(e.reason&&e.reason.message||e.reason))});
+</script>
+<input id="importFile" type="file" accept=".json,application/json" style="display:none">
+<script>
+/* ===== CONTENU PÉDAGOGIQUE (modifiable sans toucher au moteur) =====
+   PACKS : paquets de mots [anglais, français, exemple anglais, exemple français], dans l'ordre d'apprentissage.
+   THEMES : épreuves de grammaire, [français, anglais avec le [mot cible] entre crochets, [2 pièges]].
+   EPISODES : {N} = prénom, [anglais|traduction] = mot que l'on peut toucher. L'épisode n se débloque avec le bronze de l'épreuve n. */
+const PACKS=[
+{id:"gym",name:"Gym",icon:"star",tint:"#ECE8FF",ink:"#4B2FE0",words:[
+["beam","la poutre","She walks on the beam.","Elle marche sur la poutre."],
+["bars","les barres","I swing on the bars.","Je me balance aux barres."],
+["floor","le sol","Her floor routine is amazing.","Son enchaînement au sol est incroyable."],
+["vault","le saut","The vault is my favourite event.","Le saut est mon agrès préféré."],
+["cartwheel","la roue","I can do a cartwheel.","Je sais faire la roue."],
+["splits","le grand écart","She can do the splits.","Elle sait faire le grand écart."],
+["leotard","le justaucorps","My leotard is purple.","Mon justaucorps est violet."],
+["coach","l'entraîneur","My coach is very kind.","Mon entraîneur est très gentil."],
+["judge","le juge","The judges give me nine points.","Les juges me donnent neuf points."],
+["balance","l'équilibre","You need good balance on the beam.","Il faut un bon équilibre sur la poutre."],
+["jump","sauter","I jump very high.","Je saute très haut."],
+["flexible","souple","Gymnasts are very flexible.","Les gymnastes sont très souples."]]},
+{id:"daily",name:"Quotidien",icon:"sun",tint:"#F0EFF5",ink:"#4A4470",words:[
+["wake up","se réveiller","I wake up at seven.","Je me réveille à sept heures."],
+["get up","se lever","She gets up early.","Elle se lève tôt."],
+["breakfast","le petit-déjeuner","I have breakfast with my family.","Je prends le petit-déjeuner avec ma famille."],
+["early","tôt","I go to bed early.","Je me couche tôt."],
+["late","en retard","Hurry up, we're late!","Dépêche-toi, on est en retard !"],
+["always","toujours","I always eat an apple.","Je mange toujours une pomme."],
+["never","jamais","She never drinks coffee.","Elle ne boit jamais de café."],
+["sometimes","parfois","Sometimes I watch a film.","Parfois, je regarde un film."],
+["weekend","le week-end","What do you do at the weekend?","Que fais-tu le week-end ?"],
+["tidy","ranger","Tidy your room!","Range ta chambre !"],
+["phone","le téléphone","My phone is in my bag.","Mon téléphone est dans mon sac."],
+["best friend","la meilleure amie","My best friend lives near me.","Ma meilleure amie habite près de chez moi."]]},
+{id:"family",name:"Famille",icon:"user",tint:"#FDEBD3",ink:"#8A4B0F",words:[
+["mother","la mère","My mother is a nurse.","Ma mère est infirmière."],
+["father","le père","My father cooks on Sundays.","Mon père cuisine le dimanche."],
+["sister","la sœur","My little sister is seven.","Ma petite sœur a sept ans."],
+["brother","le frère","Have you got a brother?","As-tu un frère ?"],
+["parents","les parents","My parents are at work.","Mes parents sont au travail."],
+["grandmother","la grand-mère","My grandmother lives in Lyon.","Ma grand-mère habite à Lyon."],
+["grandfather","le grand-père","My grandfather tells funny stories.","Mon grand-père raconte des histoires drôles."],
+["uncle","l'oncle","My uncle has got a big dog.","Mon oncle a un gros chien."],
+["aunt","la tante","My aunt lives in London.","Ma tante habite à Londres."],
+["cousin","le cousin, la cousine","My cousin is fifteen.","Mon cousin a quinze ans."],
+["twins","les jumeaux","They are twins.","Ce sont des jumeaux."],
+["only child","l'enfant unique","Are you an only child?","Es-tu enfant unique ?"]]},
+{id:"school",name:"Collège",icon:"book",tint:"#E3EEFF",ink:"#1F5BC4",words:[
+["timetable","l'emploi du temps","Look at my timetable.","Regarde mon emploi du temps."],
+["homework","les devoirs","I do my homework after dinner.","Je fais mes devoirs après le dîner."],
+["break","la récréation","We play at break.","Nous jouons à la récré."],
+["subject","la matière","My favourite subject is PE.","Ma matière préférée est l'EPS."],
+["PE","l'EPS","We have PE on Tuesdays.","Nous avons EPS le mardi."],
+["teacher","le professeur","Our teacher is funny.","Notre professeur est drôle."],
+["pencil case","la trousse","My pencil case is full.","Ma trousse est pleine."],
+["test","le contrôle","I have a test tomorrow.","J'ai un contrôle demain."],
+["classmate","le camarade de classe","My classmates are nice.","Mes camarades sont sympas."],
+["canteen","la cantine","I eat at the canteen.","Je mange à la cantine."],
+["learn","apprendre","We learn English.","Nous apprenons l'anglais."],
+["forget","oublier","Don't forget your book!","N'oublie pas ton livre !"]]},
+{id:"food",name:"Nourriture",icon:"apple",tint:"#FFE4E0",ink:"#B42318",words:[
+["bread","le pain","I buy bread every morning.","J'achète du pain tous les matins."],
+["cheese","le fromage","French cheese is famous.","Le fromage français est célèbre."],
+["chicken","le poulet","We have chicken for lunch.","Nous mangeons du poulet au déjeuner."],
+["vegetables","les légumes","Eat your vegetables!","Mange tes légumes !"],
+["fruit","les fruits","I eat fruit after lunch.","Je mange des fruits après le déjeuner."],
+["strawberry","la fraise","I love strawberry ice cream.","J'adore la glace à la fraise."],
+["juice","le jus","An orange juice, please.","Un jus d'orange, s'il vous plaît."],
+["water","l'eau","Drink some water after training.","Bois de l'eau après l'entraînement."],
+["sweets","les bonbons","Sweets are bad for your teeth.","Les bonbons sont mauvais pour les dents."],
+["lunch","le déjeuner","Lunch is at noon.","Le déjeuner est à midi."],
+["dinner","le dîner","We have dinner at eight.","Nous dînons à huit heures."],
+["hungry","avoir faim","I'm hungry after school.","J'ai faim après l'école."]]},
+{id:"home",name:"Maison",icon:"home",tint:"#E8F1E4",ink:"#3B6B2A",words:[
+["house","la maison","Our house is near the school.","Notre maison est près du collège."],
+["bedroom","la chambre","My bedroom is small but cosy.","Ma chambre est petite mais douillette."],
+["kitchen","la cuisine","Dad is in the kitchen.","Papa est dans la cuisine."],
+["bathroom","la salle de bains","The bathroom is upstairs.","La salle de bains est à l'étage."],
+["living room","le salon","We watch TV in the living room.","Nous regardons la télé dans le salon."],
+["garden","le jardin","The cat is in the garden.","Le chat est dans le jardin."],
+["stairs","l'escalier","Don't run on the stairs!","Ne cours pas dans l'escalier !"],
+["bed","le lit","I make my bed every morning.","Je fais mon lit tous les matins."],
+["desk","le bureau","My desk is near the window.","Mon bureau est près de la fenêtre."],
+["window","la fenêtre","Open the window, please.","Ouvre la fenêtre, s'il te plaît."],
+["door","la porte","Close the door!","Ferme la porte !"],
+["upstairs","à l'étage","My room is upstairs.","Ma chambre est à l'étage."]]},
+{id:"dance",name:"Danse",icon:"note",tint:"#FFE6F1",ink:"#B4235F",words:[
+["dance","danser","I dance every Wednesday.","Je danse tous les mercredis."],
+["music","la musique","The music is too loud.","La musique est trop forte."],
+["stage","la scène","We dance on a big stage.","Nous dansons sur une grande scène."],
+["show","le spectacle","Our show is on Saturday.","Notre spectacle est samedi."],
+["step","le pas","Learn the steps with me!","Apprends les pas avec moi !"],
+["turn","tourner","She turns on one foot.","Elle tourne sur un pied."],
+["rehearsal","la répétition","The rehearsal starts at five.","La répétition commence à cinq heures."],
+["mirror","le miroir","I watch my moves in the mirror.","Je regarde mes mouvements dans le miroir."],
+["costume","le costume","My costume is red and gold.","Mon costume est rouge et or."],
+["audience","le public","The audience is clapping.","Le public applaudit."],
+["rhythm","le rythme","Follow the rhythm!","Suis le rythme !"],
+["shy","timide","I am shy before the show.","Je suis timide avant le spectacle."]]},
+{id:"athle",name:"Athlétisme",icon:"watch",tint:"#FFE9E2",ink:"#B43A1C",words:[
+["race","la course","I won the race!","J'ai gagné la course !"],
+["run","courir","I run in the park.","Je cours dans le parc."],
+["fast","vite, rapide","She runs very fast.","Elle court très vite."],
+["slow","lent","The turtle is slow.","La tortue est lente."],
+["track","la piste","We train on the track.","Nous nous entraînons sur la piste."],
+["finish line","la ligne d'arrivée","She crosses the finish line.","Elle franchit la ligne d'arrivée."],
+["start","le départ","The start is at ten o'clock.","Le départ est à dix heures."],
+["win","gagner","I want to win a medal.","Je veux gagner une médaille."],
+["lose","perdre","We never lose!","Nous ne perdons jamais !"],
+["medal","la médaille","A gold medal!","Une médaille d'or !"],
+["tired","fatigué","I am tired after the race.","Je suis fatiguée après la course."],
+["team","l'équipe","My team is the best.","Mon équipe est la meilleure."]]},
+{id:"body",name:"Corps",icon:"heart",tint:"#FDE2E4",ink:"#A61E4D",words:[
+["head","la tête","Turn your head to the left.","Tourne la tête vers la gauche."],
+["arm","le bras","Raise your arms!","Lève les bras !"],
+["leg","la jambe","My legs are tired.","J'ai les jambes fatiguées."],
+["foot","le pied","Stand on one foot.","Tiens-toi sur un pied."],
+["hand","la main","Give me your hand.","Donne-moi la main."],
+["knee","le genou","Bend your knees.","Plie les genoux."],
+["back","le dos","Keep your back straight.","Garde le dos droit."],
+["shoulder","l'épaule","Relax your shoulders.","Détends tes épaules."],
+["neck","le cou","She has a long neck.","Elle a un long cou."],
+["hurt","faire mal","My knee hurts.","J'ai mal au genou."],
+["stretch","s'étirer","Stretch before you run.","Étire-toi avant de courir."],
+["strong","fort","Gymnasts are very strong.","Les gymnastes sont très fortes."]]},
+{id:"clothes",name:"Vêtements",icon:"shirt",tint:"#DDF5E8",ink:"#1C7A4A",words:[
+["trainers","les baskets","My trainers are white.","Mes baskets sont blanches."],
+["hoodie","le sweat à capuche","I love my grey hoodie.","J'adore mon sweat gris."],
+["skirt","la jupe","This skirt is too short.","Cette jupe est trop courte."],
+["dress","la robe","She is wearing a blue dress.","Elle porte une robe bleue."],
+["jeans","le jean","My jeans are black.","Mon jean est noir."],
+["jacket","la veste","Take your jacket, it's cold.","Prends ta veste, il fait froid."],
+["socks","les chaussettes","I need new socks.","J'ai besoin de nouvelles chaussettes."],
+["bag","le sac","My bag is heavy.","Mon sac est lourd."],
+["cap","la casquette","He is wearing a cap.","Il porte une casquette."],
+["leggings","le legging","Leggings are perfect for dance.","Le legging est parfait pour la danse."],
+["scarf","l'écharpe","A warm scarf for London.","Une écharpe chaude pour Londres."],
+["wear","porter (un vêtement)","I wear a uniform at school.","Je porte un uniforme à l'école."]]},
+{id:"shop",name:"Shopping",icon:"bag",tint:"#FFF4D6",ink:"#8A5A00",words:[
+["shop","le magasin","Let's go to the shop.","Allons au magasin."],
+["price","le prix","What is the price?","Quel est le prix ?"],
+["cheap","pas cher","This bag is cheap.","Ce sac n'est pas cher."],
+["expensive","cher","These shoes are expensive.","Ces chaussures sont chères."],
+["size","la taille","What size are you?","Quelle taille fais-tu ?"],
+["try on","essayer (un vêtement)","Can I try it on?","Je peux l'essayer ?"],
+["buy","acheter","I want to buy a T-shirt.","Je veux acheter un T-shirt."],
+["sale","les soldes","There is a sale today!","Il y a des soldes aujourd'hui !"],
+["change","la monnaie","Here is your change.","Voici votre monnaie."],
+["pocket money","l'argent de poche","I save my pocket money.","J'économise mon argent de poche."],
+["fitting room","la cabine d'essayage","The fitting room is on the left.","La cabine d'essayage est à gauche."],
+["how much","combien","How much is this skirt?","Combien coûte cette jupe ?"]]},
+{id:"london",name:"Londres",icon:"umbrella",tint:"#E0F4F3",ink:"#0E6E69",words:[
+["city","la ville","London is a big city.","Londres est une grande ville."],
+["underground","le métro (à Londres)","We take the underground.","Nous prenons le métro."],
+["ticket","le billet","A ticket, please.","Un billet, s'il vous plaît."],
+["map","le plan","Look at the map!","Regarde le plan !"],
+["street","la rue","This street is very busy.","Cette rue est très animée."],
+["bridge","le pont","Tower Bridge is beautiful.","Tower Bridge est magnifique."],
+["weather","le temps (météo)","The weather is rainy today.","Le temps est pluvieux aujourd'hui."],
+["umbrella","le parapluie","Take an umbrella!","Prends un parapluie !"],
+["hotel","l'hôtel","Our hotel is near the park.","Notre hôtel est près du parc."],
+["visit","visiter","We visit the museum.","Nous visitons le musée."],
+["left","à gauche","Turn left.","Tourne à gauche."],
+["right","à droite","Turn right.","Tourne à droite."]]},
+{id:"time",name:"Le temps qui passe",icon:"clock",tint:"#EDE7F6",ink:"#5B3A9A",words:[
+["yesterday","hier","Yesterday was great.","Hier, c'était génial."],
+["tomorrow","demain","See you tomorrow!","À demain !"],
+["today","aujourd'hui","Today is Monday.","Aujourd'hui, c'est lundi."],
+["tonight","ce soir","What are you doing tonight?","Que fais-tu ce soir ?"],
+["week","la semaine","I train three times a week.","Je m'entraîne trois fois par semaine."],
+["month","le mois","My birthday is next month.","Mon anniversaire est le mois prochain."],
+["year","l'année, l'an","I'm twelve years old.","J'ai douze ans."],
+["hour","l'heure","The show lasts one hour.","Le spectacle dure une heure."],
+["minute","la minute","Wait a minute!","Attends une minute !"],
+["soon","bientôt","See you soon!","À bientôt !"],
+["now","maintenant","Do it now!","Fais-le maintenant !"],
+["ago","il y a (durée)","I started dance two years ago.","J'ai commencé la danse il y a deux ans."]]},
+{id:"weather",name:"Météo et saisons",icon:"cloud",tint:"#E1F0FB",ink:"#1D6FA3",words:[
+["sunny","ensoleillé","It's sunny today!","Il fait beau aujourd'hui !"],
+["rainy","pluvieux","London is often rainy.","Il pleut souvent à Londres."],
+["windy","venteux","It's windy on the beach.","Il y a du vent sur la plage."],
+["cloudy","nuageux","The sky is cloudy.","Le ciel est nuageux."],
+["snow","la neige","Look, it's snowing!","Regarde, il neige !"],
+["cold","froid","It's cold in winter.","Il fait froid en hiver."],
+["hot","chaud","It's very hot in summer.","Il fait très chaud en été."],
+["spring","le printemps","Flowers grow in spring.","Les fleurs poussent au printemps."],
+["summer","l'été","We go to the beach in summer.","Nous allons à la plage en été."],
+["autumn","l'automne","Leaves fall in autumn.","Les feuilles tombent en automne."],
+["winter","l'hiver","I love skiing in winter.","J'adore skier en hiver."],
+["storm","l'orage","There is a storm tonight.","Il y a un orage ce soir."]]},
+{id:"feelings",name:"Émotions",icon:"smile",tint:"#FFF0D9",ink:"#9A5B00",words:[
+["happy","heureux, content","I'm happy today!","Je suis contente aujourd'hui !"],
+["sad","triste","Why are you sad?","Pourquoi es-tu triste ?"],
+["angry","en colère","My brother is angry.","Mon frère est en colère."],
+["scared","avoir peur","I'm scared of spiders.","J'ai peur des araignées."],
+["excited","tout excité, impatient","I'm so excited about the trip!","J'ai trop hâte de faire ce voyage !"],
+["bored","s'ennuyer","I'm bored at home.","Je m'ennuie à la maison."],
+["proud","fier","My coach is proud of me.","Mon entraîneur est fier de moi."],
+["worried","inquiet","Don't be worried!","Ne t'inquiète pas !"],
+["surprised","surpris","She was surprised by the news.","Elle a été surprise par la nouvelle."],
+["calm","calme","Stay calm before the show.","Reste calme avant le spectacle."],
+["funny","drôle","My best friend is so funny.","Ma meilleure amie est trop drôle."],
+["kind","gentil","Be kind to your sister.","Sois gentille avec ta sœur."]]},
+{id:"hobbies",name:"Loisirs",icon:"game",tint:"#E6E9FF",ink:"#3442B5",words:[
+["video game","le jeu vidéo","This video game is great.","Ce jeu vidéo est génial."],
+["series","la série","I watch a series in English.","Je regarde une série en anglais."],
+["song","la chanson","This is my favourite song.","C'est ma chanson préférée."],
+["sing","chanter","She sings very well.","Elle chante très bien."],
+["draw","dessiner","I like to draw animals.","J'aime dessiner des animaux."],
+["read","lire","I read before bed.","Je lis avant de dormir."],
+["swim","nager","We swim at the pool.","Nous nageons à la piscine."],
+["ride a bike","faire du vélo","I ride a bike to school.","Je vais au collège à vélo."],
+["cinema","le cinéma","Let's go to the cinema!","Allons au cinéma !"],
+["message","le message","Send me a message.","Envoie-moi un message."],
+["screen","l'écran","Too much screen time is bad.","Trop d'écrans, ce n'est pas bon."],
+["hobby","le loisir, la passion","Dancing is my favourite hobby.","La danse est ma passion préférée."]]},
+{id:"animals",name:"Animaux",icon:"paw",tint:"#F3EBDD",ink:"#7A5420",words:[
+["dog","le chien","My dog loves the park.","Mon chien adore le parc."],
+["cat","le chat","The cat is sleeping on my bed.","Le chat dort sur mon lit."],
+["horse","le cheval","She rides a horse on Saturdays.","Elle monte à cheval le samedi."],
+["rabbit","le lapin","My rabbit eats carrots.","Mon lapin mange des carottes."],
+["bird","l'oiseau","A bird is singing.","Un oiseau chante."],
+["fish","le poisson","I have got two fish.","J'ai deux poissons."],
+["mouse","la souris","The mouse is very small.","La souris est très petite."],
+["squirrel","l'écureuil","There are squirrels in the park.","Il y a des écureuils dans le parc."],
+["lion","le lion","The lion is the king of animals.","Le lion est le roi des animaux."],
+["elephant","l'éléphant","Elephants have big ears.","Les éléphants ont de grandes oreilles."],
+["pet","l'animal de compagnie","Have you got a pet?","As-tu un animal de compagnie ?"],
+["feed","nourrir","I feed my cat every morning.","Je nourris mon chat tous les matins."]]},
+{id:"nature",name:"Nature",icon:"tree",tint:"#E2F3E6",ink:"#24733A",words:[
+["tree","l'arbre","There is a big tree in the garden.","Il y a un grand arbre dans le jardin."],
+["flower","la fleur","This flower smells nice.","Cette fleur sent bon."],
+["forest","la forêt","We walk in the forest.","Nous marchons dans la forêt."],
+["river","la rivière","The river is very cold.","La rivière est très froide."],
+["sea","la mer","I swim in the sea in summer.","Je nage dans la mer en été."],
+["beach","la plage","The beach is beautiful.","La plage est magnifique."],
+["mountain","la montagne","We go to the mountains in winter.","Nous allons à la montagne en hiver."],
+["lake","le lac","There are ducks on the lake.","Il y a des canards sur le lac."],
+["sky","le ciel","The sky is blue.","Le ciel est bleu."],
+["sun","le soleil","The sun is shining.","Le soleil brille."],
+["moon","la lune","The moon is full tonight.","C'est la pleine lune ce soir."],
+["island","l'île","Corsica is an island.","La Corse est une île."]]},
+{id:"verbs",name:"Verbes utiles",icon:"bolt",tint:"#FFE9D6",ink:"#A04A00",words:[
+["go","aller","I go to school by bus.","Je vais au collège en bus."],
+["come","venir","Come with me!","Viens avec moi !"],
+["see","voir","I can see the sea!","Je vois la mer !"],
+["eat","manger","We eat at the canteen.","Nous mangeons à la cantine."],
+["drink","boire","Drink your milk.","Bois ton lait."],
+["take","prendre","Take your coat.","Prends ton manteau."],
+["give","donner","Give me the ball!","Donne-moi le ballon !"],
+["make","faire, fabriquer","Let's make a cake.","Faisons un gâteau."],
+["think","penser","I think you're right.","Je pense que tu as raison."],
+["know","savoir, connaître","I know the answer!","Je connais la réponse !"],
+["find","trouver","I can't find my keys.","Je ne trouve pas mes clés."],
+["say","dire","What did you say?","Qu'est-ce que tu as dit ?"]]},
+{id:"describe",name:"Descriptions",icon:"eye",tint:"#F1E8FF",ink:"#6B3FC4",words:[
+["tall","grand (taille)","My brother is very tall.","Mon frère est très grand."],
+["short","petit, court","She has short hair.","Elle a les cheveux courts."],
+["hair","les cheveux","She has long brown hair.","Elle a de longs cheveux bruns."],
+["eyes","les yeux","He has blue eyes.","Il a les yeux bleus."],
+["young","jeune","My aunt is young.","Ma tante est jeune."],
+["old","vieux, âgé","This castle is very old.","Ce château est très vieux."],
+["pretty","joli","What a pretty dress!","Quelle jolie robe !"],
+["ugly","moche","This jumper is ugly!","Ce pull est moche !"],
+["new","nouveau, neuf","I have a new phone.","J'ai un nouveau téléphone."],
+["big","grand, gros","New York is a big city.","New York est une grande ville."],
+["small","petit","My room is small.","Ma chambre est petite."],
+["easy","facile","This exercise is easy!","Cet exercice est facile !"]]},
+{id:"travel",name:"Voyage",icon:"plane",tint:"#E0EEFF",ink:"#2457A6",words:[
+["airport","l'aéroport","We are at the airport.","Nous sommes à l'aéroport."],
+["plane","l'avion","The plane is late.","L'avion est en retard."],
+["passport","le passeport","Don't forget your passport!","N'oublie pas ton passeport !"],
+["suitcase","la valise","My suitcase is too heavy.","Ma valise est trop lourde."],
+["flight","le vol","Our flight is at nine.","Notre vol est à neuf heures."],
+["seat","la place, le siège","This is my seat.","C'est ma place."],
+["window seat","la place côté hublot","Can I have a window seat?","Je peux avoir une place côté hublot ?"],
+["arrive","arriver","We arrive in New York at noon.","Nous arrivons à New York à midi."],
+["leave","partir","The bus leaves at six.","Le bus part à six heures."],
+["trip","le voyage","Have a good trip!","Bon voyage !"],
+["luggage","les bagages","Where is your luggage?","Où sont tes bagages ?"],
+["abroad","à l'étranger","I want to study abroad.","Je veux étudier à l'étranger."]]},
+{id:"newyork",name:"New York",icon:"building",tint:"#FFF3C4",ink:"#7A5A00",words:[
+["skyscraper","le gratte-ciel","Look at that skyscraper!","Regarde ce gratte-ciel !"],
+["subway","le métro (aux États-Unis)","We take the subway.","Nous prenons le métro."],
+["taxi","le taxi","New York taxis are yellow.","Les taxis de New York sont jaunes."],
+["block","le pâté de maisons","The hotel is two blocks away.","L'hôtel est à deux rues d'ici."],
+["sidewalk","le trottoir","Walk on the sidewalk.","Marche sur le trottoir."],
+["crowd","la foule","There is a big crowd in Times Square.","Il y a une grande foule à Times Square."],
+["statue","la statue","The Statue of Liberty is green.","La statue de la Liberté est verte."],
+["museum","le musée","This museum is free today.","Ce musée est gratuit aujourd'hui."],
+["park","le parc","Central Park is huge.","Central Park est immense."],
+["noisy","bruyant","The city is very noisy.","La ville est très bruyante."],
+["souvenir","le souvenir (objet)","I bought a souvenir for my mum.","J'ai acheté un souvenir pour ma mère."],
+["corner","le coin","Meet me at the corner.","Retrouve-moi au coin de la rue."]]},
+{id:"food2",name:"Au restaurant",icon:"fork",tint:"#FFE8E8",ink:"#A3262A",words:[
+["menu","la carte","Can I see the menu, please?","Je peux voir la carte, s'il vous plaît ?"],
+["order","commander","Are you ready to order?","Vous êtes prêts à commander ?"],
+["waiter","le serveur","The waiter is very nice.","Le serveur est très sympa."],
+["bill","l'addition","The bill, please.","L'addition, s'il vous plaît."],
+["pancakes","les pancakes","I want pancakes for breakfast.","Je veux des pancakes au petit-déjeuner."],
+["burger","le burger","This burger is huge!","Ce burger est énorme !"],
+["fries","les frites","A burger and fries, please.","Un burger et des frites, s'il vous plaît."],
+["salad","la salade","I'd like a green salad.","Je voudrais une salade verte."],
+["dessert","le dessert","What's for dessert?","Qu'est-ce qu'il y a comme dessert ?"],
+["delicious","délicieux","This cake is delicious!","Ce gâteau est délicieux !"],
+["tip","le pourboire","In New York, people leave a tip.","À New York, on laisse un pourboire."],
+["glass","le verre","A glass of water, please.","Un verre d'eau, s'il vous plaît."]]},
+{id:"jobs",name:"Métiers",icon:"briefcase",tint:"#E9EEF3",ink:"#34506B",words:[
+["doctor","le médecin","The doctor is very busy.","Le médecin est très occupé."],
+["nurse","l'infirmier, l'infirmière","She wants to be a nurse.","Elle veut devenir infirmière."],
+["vet","le vétérinaire","The vet looks after my dog.","Le vétérinaire soigne mon chien."],
+["firefighter","le pompier","Firefighters are brave.","Les pompiers sont courageux."],
+["police officer","le policier","Ask the police officer.","Demande au policier."],
+["engineer","l'ingénieur","My uncle is an engineer.","Mon oncle est ingénieur."],
+["journalist","le journaliste","The journalist asks questions.","La journaliste pose des questions."],
+["cook","le cuisinier","He is a great cook.","C'est un excellent cuisinier."],
+["shop assistant","le vendeur, la vendeuse","The shop assistant is helpful.","La vendeuse est serviable."],
+["job","le métier","What's your dream job?","Quel est le métier de tes rêves ?"],
+["work","travailler","My parents work in Paris.","Mes parents travaillent à Paris."],
+["become","devenir","I want to become a coach.","Je veux devenir entraîneuse."]]}
+];
+
+const THEMES=[
+/* ---------- SAISON 1 : LONDRES ---------- */
+{sport:"Gym",title:"Mes habitudes",gram:"Présent simple",rule:"Habitude = présent simple. Avec he / she / it, le verbe prend un -s : she trains. Négation : don't / doesn't + verbe. Question : Do / Does + sujet + verbe.",items:[
+["Elle s'entraîne tous les lundis.","She [trains] every Monday.",["train","training"]],
+["Je danse le mercredi.","I [dance] on Wednesdays.",["dances","dancing"]],
+["Mon entraîneur arrive à cinq heures.","My coach [arrives] at five o'clock.",["arrive","arriving"]],
+["Nous allons au gymnase après l'école.","We [go] to the gym after school.",["goes","going"]],
+["Il regarde toujours les compétitions.","He always [watches] the competitions.",["watch","watching"]],
+["Mes amis aiment la musique.","My friends [like] music.",["likes","liking"]],
+["Elle ne mange pas de bonbons.","She [doesn't] eat sweets.",["don't","isn't"]],
+["Est-ce que tu t'entraînes le samedi ?","[Do] you train on Saturdays?",["Does","Are"]],
+["Ma sœur se lève à sept heures.","My sister [gets] up at seven.",["get","getting"]],
+["Nous prenons le bus le matin.","We [take] the bus in the morning.",["takes","taking"]],
+["Il ne regarde pas la télé.","He [doesn't] watch TV.",["don't","isn't"]],
+["Je n'aime pas les épinards.","I [don't] like spinach.",["doesn't","am not"]],
+["Mon père travaille à Paris.","My father [works] in Paris.",["work","working"]],
+["Elle étudie l'anglais au collège.","She [studies] English at school.",["study","studys"]],
+["Les élèves déjeunent à la cantine.","The pupils [have] lunch at the canteen.",["has","having"]],
+["Ma grand-mère habite près de chez nous.","My grandmother [lives] near us.",["live","living"]],
+["Il fait ses devoirs après le dîner.","He [does] his homework after dinner.",["do","dos"]],
+["Est-ce qu'elle aime la danse ?","[Does] she like dance?",["Do","Is"]],
+["Nous ne travaillons pas le dimanche.","We [don't] work on Sundays.",["doesn't","aren't"]],
+["Le cours commence à huit heures.","The lesson [starts] at eight o'clock.",["start","starting"]],
+["Mon chat dort sur mon lit.","My cat [sleeps] on my bed.",["sleep","sleeping"]],
+["Tu joues au basket ?","[Do] you play basketball?",["Does","Are"]],
+["Elle va à la piscine le mercredi.","She [goes] to the pool on Wednesdays.",["go","gos"]],
+["Ils regardent souvent des films.","They often [watch] films.",["watches","watching"]]]},
+{sport:"Gym",title:"Ce que je sais faire",gram:"Can / can't",rule:"can / can't + verbe, sans 'to' et sans -s : she can jump, I can't swim. Question : Can you dance?",items:[
+["Je sais faire la roue.","I can [do] a cartwheel.",["to do","does"]],
+["Elle sait faire le grand écart.","She [can] do the splits.",["cans","can to"]],
+["Il ne sait pas nager.","He [can't] swim.",["doesn't can","not can"]],
+["Est-ce que tu sais danser ?","[Can] you dance?",["Do","Are"]],
+["Nous pouvons courir très vite.","We can [run] very fast.",["to run","runs"]],
+["Mon chat sait sauter très haut.","My cat can [jump] very high.",["jumps","to jump"]],
+["Je ne peux pas venir samedi.","I [can't] come on Saturday.",["don't can","not can"]],
+["Elle sait jouer de la guitare.","She can [play] the guitar.",["plays","to play"]],
+["Tu peux m'aider ?","[Can] you help me?",["Do","Are"]],
+["Je ne sais pas nager le papillon.","I [can't] swim butterfly.",["don't can","not can"]],
+["Les oiseaux savent voler.","Birds can [fly].",["flies","to fly"]],
+["Elle sait parler trois langues.","She can [speak] three languages.",["speaks","to speak"]],
+["Nous ne pouvons pas sortir ce soir.","We [can't] go out tonight.",["don't can","aren't"]],
+["Est-ce qu'il sait faire la roue ?","[Can] he do a cartwheel?",["Does","Is"]],
+["Je peux toucher mes orteils.","I can [touch] my toes.",["touches","to touch"]],
+["Mon frère sait cuisiner.","My brother can [cook].",["cooks","to cook"]],
+["Tu ne peux pas utiliser ton téléphone en classe.","You [can't] use your phone in class.",["don't can","not can"]],
+["Elle sait faire l'équilibre sur les mains.","She can [do] a handstand.",["does","to do"]],
+["Les chats peuvent voir dans le noir.","Cats can [see] in the dark.",["sees","to see"]],
+["Je peux venir avec toi ?","[Can] I come with you?",["Do","Am"]],
+["Ma petite sœur ne sait pas lire.","My little sister [can't] read.",["doesn't can","not can"]],
+["Nous savons danser la salsa.","We can [dance] salsa.",["dances","to dance"]],
+["Vous pouvez répéter, s'il vous plaît ?","[Can] you repeat that, please?",["Do","Are"]],
+["Il sait sauter très loin.","He can [jump] very far.",["jumps","to jump"]]]},
+{sport:"Danse",title:"En ce moment",gram:"Présent en -ing",rule:"Action en cours = am / is / are + verbe-ing : I am dancing, she is rehearsing. Négation : isn't / aren't / am not.",items:[
+["Je danse en ce moment.","I am [dancing] now.",["dance","dances"]],
+["Elle répète pour le spectacle.","She [is] rehearsing for the show.",["are","am"]],
+["Nous écoutons la musique.","We are [listening] to the music.",["listen","listens"]],
+["Le public applaudit.","The audience [is] clapping.",["are","am"]],
+["Ils se regardent dans le miroir.","They are [looking] in the mirror.",["look","looks"]],
+["Qu'est-ce que tu fais ?","What are you [doing]?",["do","does"]],
+["Il ne danse pas aujourd'hui.","He [isn't] dancing today.",["doesn't","aren't"]],
+["Tu portes ton costume ?","[Are] you wearing your costume?",["Do","Is"]],
+["Je suis en train de faire mes devoirs.","I am [doing] my homework.",["do","does"]],
+["Ma mère cuisine en ce moment.","My mother [is] cooking now.",["are","am"]],
+["Il pleut !","It is [raining]!",["rain","rains"]],
+["Les enfants jouent dans le jardin.","The children are [playing] in the garden.",["play","plays"]],
+["Elle ne regarde pas la télé.","She [isn't] watching TV.",["doesn't","aren't"]],
+["Qu'est-ce que tu manges ?","What are you [eating]?",["eat","eats"]],
+["Nous attendons le bus.","We are [waiting] for the bus.",["wait","waits"]],
+["Le chat dort sur le canapé.","The cat [is] sleeping on the sofa.",["are","am"]],
+["Je n'écoute pas !","I am [not] listening!",["don't","no"]],
+["Tu écoutes de la musique ?","[Are] you listening to music?",["Do","Is"]],
+["Ils courent vers la ligne d'arrivée.","They are [running] to the finish line.",["run","runing"]],
+["Mon frère joue aux jeux vidéo.","My brother [is] playing video games.",["are","am"]],
+["Elle porte une robe bleue.","She is [wearing] a blue dress.",["wear","wears"]],
+["Où vas-tu ?","Where are you [going]?",["go","goes"]],
+["Nous répétons le spectacle.","We are [rehearsing] the show.",["rehearse","rehearses"]],
+["Le soleil brille.","The sun [is] shining.",["are","am"]]]},
+{sport:"Athlétisme",title:"Raconter la course",gram:"Prétérit",rule:"Action terminée = prétérit : -ed (watched, crossed) ou verbe irrégulier (win → won, run → ran, go → went, see → saw). Négation et question : didn't / did + verbe.",items:[
+["J'ai gagné la course hier.","I [won] the race yesterday.",["win","winned"]],
+["Elle a couru très vite.","She [ran] very fast.",["runned","runs"]],
+["Nous sommes allés au stade.","We [went] to the stadium.",["goed","go"]],
+["Mon entraîneur était très content.","My coach [was] very happy.",["were","is"]],
+["Ils ont regardé la course.","They [watched] the race.",["watch","watches"]],
+["Je n'ai pas perdu.","I [didn't] lose.",["don't","wasn't"]],
+["Elle a franchi la ligne d'arrivée.","She [crossed] the finish line.",["cross","crosses"]],
+["As-tu gagné une médaille ?","[Did] you win a medal?",["Do","Were"]],
+["Hier, j'ai regardé un film.","I [watched] a film yesterday.",["watch","watchs"]],
+["Elle a mangé une pizza.","She [ate] a pizza.",["eated","eats"]],
+["Nous avons visité le musée.","We [visited] the museum.",["visit","visits"]],
+["Il a trouvé ses clés.","He [found] his keys.",["finded","finds"]],
+["Ils sont arrivés en retard.","They [arrived] late.",["arrive","arrives"]],
+["Je suis allée à la piscine samedi.","I [went] to the pool on Saturday.",["goed","go"]],
+["Elle n'a pas aimé le film.","She [didn't] like the film.",["doesn't","wasn't"]],
+["As-tu vu le match ?","[Did] you see the match?",["Do","Were"]],
+["Le spectacle était génial.","The show [was] great.",["were","is"]],
+["Nous étions fatigués.","We [were] tired.",["was","are"]],
+["Mon père a acheté une nouvelle voiture.","My father [bought] a new car.",["buyed","buys"]],
+["J'ai écrit une lettre à ma tante.","I [wrote] a letter to my aunt.",["writed","write"]],
+["Elle a sauté très haut.","She [jumped] very high.",["jump","jumps"]],
+["Ils n'ont pas gagné.","They [didn't] win.",["don't","weren't"]],
+["Nous avons pris le train.","We [took] the train.",["taked","take"]],
+["Où étais-tu hier ?","Where [were] you yesterday?",["was","did"]]]},
+{sport:"Londres",title:"Mes projets",gram:"Going to",rule:"Projet = am / is / are + going to + verbe : I am going to visit London. Négation : I'm not / she isn't going to...",items:[
+["Je vais visiter Londres.","I am [going] to visit London.",["go","goes"]],
+["Elle va acheter un billet.","She [is] going to buy a ticket.",["are","am"]],
+["Nous allons prendre le métro.","We are going to [take] the underground.",["taking","takes"]],
+["Ils vont voir Tower Bridge.","They [are] going to see Tower Bridge.",["is","am"]],
+["Il va pleuvoir.","It is going to [rain].",["raining","rains"]],
+["Je ne vais pas perdre !","I am [not] going to lose!",["don't","no"]],
+["Qu'est-ce que tu vas faire ?","What are you going to [do]?",["doing","does"]],
+["Vas-tu courir demain ?","[Are] you going to run tomorrow?",["Do","Is"]],
+["Nous allons manger au restaurant.","We are going to [eat] at a restaurant.",["eating","eats"]],
+["Elle va porter sa nouvelle robe.","She [is] going to wear her new dress.",["are","am"]],
+["Je vais ranger ma chambre.","I am going to [tidy] my room.",["tidying","tidies"]],
+["Il va faire froid demain.","It is going to [be] cold tomorrow.",["is","being"]],
+["Ils ne vont pas venir.","They [aren't] going to come.",["don't","isn't"]],
+["Tu vas acheter ce sac ?","[Are] you going to buy this bag?",["Do","Is"]],
+["Mon frère va jouer au foot.","My brother [is] going to play football.",["are","am"]],
+["Nous allons regarder un film ce soir.","We are [going] to watch a film tonight.",["go","goes"]],
+["Elle ne va pas courir aujourd'hui.","She [isn't] going to run today.",["doesn't","aren't"]],
+["Je vais devenir entraîneuse.","I am going to [become] a coach.",["becoming","becomes"]],
+["Quand vas-tu partir ?","When are you going to [leave]?",["leaving","leaves"]],
+["Mes parents vont visiter Londres.","My parents [are] going to visit London.",["is","am"]],
+["Nous allons prendre l'avion.","We are going to [take] the plane.",["taking","takes"]],
+["Il va gagner la course !","He [is] going to win the race!",["are","am"]],
+["Je vais apprendre dix mots.","I am going to [learn] ten words.",["learning","learns"]],
+["Est-ce qu'il va pleuvoir ?","[Is] it going to rain?",["Does","Are"]]]},
+{sport:"Shopping",title:"Comparer les prix",gram:"Comparatifs",rule:"Mot court : -er + than (cheaper than). Mot long : more ... than (more expensive than). Le plus : the cheapest, the most expensive. Irréguliers : good → better → the best, bad → worse → the worst.",items:[
+["Ce sac est moins cher que le sac rouge.","This bag is [cheaper] than the red bag.",["cheap","more cheap"]],
+["Les baskets sont plus chères que le sweat.","The trainers are [more] expensive than the hoodie.",["expensiver","most"]],
+["C'est le plus grand magasin de Londres.","It is the [biggest] shop in London.",["bigger","most big"]],
+["Ma jupe est plus courte que ta robe.","My skirt is [shorter] than your dress.",["short","more short"]],
+["C'est la veste la plus chère.","It is the [most] expensive jacket.",["more","expensivest"]],
+["Elle est plus rapide que moi.","She is [faster] than me.",["more fast","fastest"]],
+["Ton sac est plus lourd que le mien.","Your bag is [heavier] than mine.",["heavyer","more heavy"]],
+["C'est la meilleure boutique !","It is the [best] shop!",["better","goodest"]],
+["Londres est plus grand que Paris.","London is [bigger] than Paris.",["more big","biggest"]],
+["Ce film est plus intéressant que le livre.","This film is [more] interesting than the book.",["most","interestinger"]],
+["Mon frère est plus grand que moi.","My brother is [taller] than me.",["more tall","tallest"]],
+["C'est le jour le plus froid de l'année.","It is the [coldest] day of the year.",["colder","most cold"]],
+["Le chocolat est meilleur que les bonbons.","Chocolate is [better] than sweets.",["gooder","best"]],
+["C'est la plus belle robe du magasin.","It is the [most] beautiful dress in the shop.",["more","beautifulest"]],
+["Ma valise est plus lourde que la tienne.","My suitcase is [heavier] than yours.",["heavyer","more heavy"]],
+["Le train est plus lent que l'avion.","The train is [slower] than the plane.",["more slow","slowest"]],
+["C'est la question la plus facile.","It is the [easiest] question.",["easier","most easy"]],
+["Les maths sont plus difficiles que l'anglais.","Maths is [more] difficult than English.",["most","difficulter"]],
+["C'est le pire jour de ma vie !","It is the [worst] day of my life!",["baddest","worse"]],
+["Ce T-shirt est moins cher que ce sweat.","This T-shirt is [cheaper] than this hoodie.",["cheap","more cheap"]],
+["Elle est la plus jeune de l'équipe.","She is the [youngest] in the team.",["younger","most young"]],
+["Ton téléphone est plus récent que le mien.","Your phone is [newer] than mine.",["more new","newest"]],
+["C'est le magasin le plus cher de la rue.","It is the [most] expensive shop in the street.",["more","expensivest"]],
+["Ma note est pire que la tienne.","My mark is [worse] than yours.",["badder","worst"]]]},
+{sport:"Interview",title:"Poser des questions",gram:"Questions",rule:"Do / Does au présent, Did au passé, puis le verbe sans -s : Does she dance? Avec be, on inverse : Is she tired? Where are you?",items:[
+["Est-ce que tu aimes la gym ?","[Do] you like gymnastics?",["Does","Are"]],
+["Est-ce qu'elle danse le samedi ?","[Does] she dance on Saturdays?",["Do","Is"]],
+["Où habites-tu ?","Where [do] you live?",["does","are"]],
+["À quelle heure commence la course ?","What time [does] the race start?",["do","is"]],
+["As-tu vu le spectacle hier ?","[Did] you see the show yesterday?",["Do","Does"]],
+["Combien coûte ce sweat ?","How much [is] this hoodie?",["does","are"]],
+["Qui est ton entraîneur ?","Who [is] your coach?",["are","does"]],
+["Pourquoi es-tu fatiguée ?","Why [are] you tired?",["do","is"]],
+["Quel âge as-tu ?","How old [are] you?",["do","is"]],
+["Où est la gare ?","Where [is] the station?",["are","does"]],
+["Qu'est-ce que tu aimes faire ?","What [do] you like doing?",["does","are"]],
+["Quand est ton anniversaire ?","When [is] your birthday?",["are","does"]],
+["Est-ce que ton frère joue au foot ?","[Does] your brother play football?",["Do","Is"]],
+["Où es-tu allée hier ?","Where [did] you go yesterday?",["do","were"]],
+["Comment vas-tu ?","How [are] you?",["is","do"]],
+["Que fait ta mère ?","What [does] your mother do?",["do","is"]],
+["As-tu aimé le spectacle ?","[Did] you like the show?",["Do","Were"]],
+["Combien de frères as-tu ?","How many brothers [have] you got?",["has","do"]],
+["Est-ce qu'ils habitent à Londres ?","[Do] they live in London?",["Does","Are"]],
+["Pourquoi est-elle en retard ?","Why [is] she late?",["are","does"]],
+["À quelle heure te lèves-tu ?","What time [do] you get up?",["does","are"]],
+["Quelle est ta couleur préférée ?","What [is] your favourite colour?",["are","does"]],
+["Qui a gagné la course ?","Who [won] the race?",["did win","wins"]],
+["Combien de temps dure le film ?","How long [is] the film?",["does","are"]]]},
+{sport:"Bilan",title:"Mon bilan de saison",gram:"Present perfect",rule:"Bilan = have / has + participe passé : I have won three medals, she has visited London. Jamais : never. Déjà (question) : ever. Déjà (affirmation) : already.",items:[
+["J'ai gagné trois médailles.","I [have] won three medals.",["has","am"]],
+["Elle a visité Londres deux fois.","She [has] visited London twice.",["have","is"]],
+["Nous avons fini le stage.","We have [finished] the training camp.",["finish","finishing"]],
+["Je n'ai jamais perdu une course.","I have [never] lost a race.",["ever","not"]],
+["As-tu déjà vu Big Ben ?","Have you [ever] seen Big Ben?",["never","did"]],
+["Il a acheté de nouvelles baskets.","He [has] bought new trainers.",["have","is"]],
+["Ils ont appris beaucoup de mots.","They have [learnt] a lot of words.",["learn","learning"]],
+["J'ai fait des progrès en anglais.","I have [made] progress in English.",["make","maked"]],
+["J'ai déjà fini mes devoirs.","I have [already] finished my homework.",["ever","yet"]],
+["Elle n'a jamais pris l'avion.","She has [never] taken a plane.",["ever","not"]],
+["Nous avons vu ce film trois fois.","We [have] seen this film three times.",["has","are"]],
+["Il a perdu son téléphone.","He [has] lost his phone.",["have","is"]],
+["As-tu déjà mangé des sushis ?","Have you [ever] eaten sushi?",["never","yet"]],
+["Ils ont gagné deux médailles.","They [have] won two medals.",["has","are"]],
+["Ma sœur a lu tous les livres.","My sister [has] read all the books.",["have","is"]],
+["J'ai oublié mon sac !","I have [forgotten] my bag!",["forget","forgetting"]],
+["Elle a appris à nager.","She has [learnt] to swim.",["learn","learning"]],
+["Nous n'avons pas encore commencé.","We [haven't] started yet.",["don't","hasn't"]],
+["Le film a commencé.","The film [has] started.",["have","is"]],
+["J'ai vu la tour Eiffel.","I have [seen] the Eiffel Tower.",["saw","see"]],
+["Il n'a jamais gagné de course.","He has [never] won a race.",["ever","not"]],
+["Mes parents ont visité New York.","My parents [have] visited New York.",["has","are"]],
+["Tu as fini ?","[Have] you finished?",["Has","Are"]],
+["Elle a été malade toute la semaine.","She [has] been ill all week.",["have","is"]]]},
+/* ---------- SAISON 2 : NEW YORK ---------- */
+{sport:"New York",title:"Faire les courses",gram:"Some / any / much / many",rule:"some dans une phrase affirmative (some bread), any dans une négation ou une question (I haven't got any money). How much + ce qui ne se compte pas (water, money, time). How many + ce qui se compte (apples, friends). There is + singulier, there are + pluriel.",items:[
+["J'ai des pommes.","I have got [some] apples.",["any","many"]],
+["Nous n'avons pas de lait.","We haven't got [any] milk.",["some","much"]],
+["As-tu de l'argent ?","Have you got [any] money?",["some","many"]],
+["Combien de pommes veux-tu ?","How [many] apples do you want?",["much","some"]],
+["Combien d'argent as-tu ?","How [much] money have you got?",["many","any"]],
+["Il y a du pain sur la table.","There is [some] bread on the table.",["any","many"]],
+["Il n'y a pas de bonbons.","There aren't [any] sweets.",["some","much"]],
+["Je voudrais de l'eau.","I would like [some] water.",["any","many"]],
+["Il y a beaucoup de taxis à New York.","There are [many] taxis in New York.",["much","any"]],
+["Je n'ai pas beaucoup de temps.","I haven't got [much] time.",["many","some"]],
+["Est-ce qu'il y a des œufs ?","Are there [any] eggs?",["some","much"]],
+["Elle a beaucoup d'amis.","She has got [many] friends.",["much","any"]],
+["Combien coûtent ces baskets ?","How [much] are these trainers?",["many","any"]],
+["Nous avons besoin de fromage.","We need [some] cheese.",["any","many"]],
+["Il n'y a pas de musée ici.","There [isn't] a museum here.",["aren't","doesn't"]],
+["Il y a deux parcs près de l'hôtel.","There [are] two parks near the hotel.",["is","have"]],
+["Y a-t-il une piscine ?","[Is] there a swimming pool?",["Are","Has"]],
+["Je ne bois pas beaucoup de soda.","I don't drink [much] soda.",["many","some"]],
+["Combien d'élèves y a-t-il ?","How [many] pupils are there?",["much","any"]],
+["Tu veux des frites ?","Do you want [some] fries?",["much","many"]],
+["Il n'y a pas d'eau dans la bouteille.","There isn't [any] water in the bottle.",["some","many"]],
+["Il y a beaucoup de bruit.","There is a lot [of] noise.",["off","from"]],
+["Il y a beaucoup de gens à Times Square.","There are a lot of [people] in Times Square.",["peoples","person"]],
+["Je n'ai pas de frères.","I haven't got [any] brothers.",["some","much"]]]},
+{sport:"Récit",title:"Raconter une scène",gram:"Prétérit en -ing",rule:"Action en cours dans le passé = was / were + verbe-ing : I was walking in the park. Si une action courte l'interrompt, elle est au prétérit : I was reading when the phone rang.",items:[
+["Je marchais dans le parc.","I [was] walking in the park.",["were","am"]],
+["Ils regardaient la télé.","They [were] watching TV.",["was","are"]],
+["Elle dansait quand je suis arrivée.","She was [dancing] when I arrived.",["danced","dance"]],
+["Il pleuvait ce matin.","It [was] raining this morning.",["were","is"]],
+["Nous attendions le bus.","We were [waiting] for the bus.",["waited","wait"]],
+["Que faisais-tu hier à cinq heures ?","What [were] you doing at five yesterday?",["was","did"]],
+["Je ne dormais pas.","I [wasn't] sleeping.",["weren't","didn't"]],
+["Elle lisait quand le téléphone a sonné.","She was reading when the phone [rang].",["ringed","was ringing"]],
+["Ils jouaient au basket.","They were [playing] basketball.",["played","play"]],
+["Mon frère faisait ses devoirs.","My brother [was] doing his homework.",["were","is"]],
+["Il ne travaillait pas hier.","He [wasn't] working yesterday.",["weren't","didn't"]],
+["Est-ce que tu écoutais ?","[Were] you listening?",["Was","Did"]],
+["Le soleil brillait.","The sun [was] shining.",["were","is"]],
+["Nous mangions quand il est arrivé.","We were eating when he [arrived].",["arriving","was arriving"]],
+["Les gens couraient dans la rue.","People [were] running in the street.",["was","are"]],
+["Je prenais une photo.","I was [taking] a photo.",["took","take"]],
+["Elle portait une casquette.","She was [wearing] a cap.",["wore","wear"]],
+["Où allais-tu ?","Where [were] you going?",["was","did"]],
+["Lily chantait sous la douche.","Lily [was] singing in the shower.",["were","is"]],
+["Nous ne regardions pas le match.","We [weren't] watching the match.",["wasn't","didn't"]],
+["Il faisait du vélo quand il est tombé.","He was riding his bike when he [fell].",["falled","was falling"]],
+["Est-ce qu'elle pleurait ?","[Was] she crying?",["Were","Did"]],
+["Les oiseaux chantaient.","The birds [were] singing.",["was","are"]],
+["Je parlais avec ma cousine.","I was [talking] to my cousin.",["talked","talk"]]]},
+{sport:"Futur",title:"Imaginer l'avenir",gram:"Will",rule:"Prédiction ou décision prise sur le moment = will + verbe, sans -s : it will rain, I'll help you. Négation : won't (= will not). Question : Will you come?",items:[
+["Il pleuvra demain.","It [will] rain tomorrow.",["is","going"]],
+["Je t'aiderai.","I [will] help you.",["am","going"]],
+["Elle sera célèbre un jour.","She will [be] famous one day.",["is","being"]],
+["Nous ne serons pas en retard.","We [won't] be late.",["don't","aren't"]],
+["Tu aimeras New York.","You will [love] New York.",["loves","to love"]],
+["Est-ce qu'il viendra ?","[Will] he come?",["Does","Is"]],
+["Les voitures voleront en 2100.","Cars will [fly] in 2100.",["flies","flying"]],
+["Je pense qu'elle gagnera.","I think she [will] win.",["wills","is"]],
+["Ils ne gagneront pas.","They [won't] win.",["don't","willn't"]],
+["Je serai professeur.","I will [be] a teacher.",["am","being"]],
+["Il fera beau ce week-end.","It will [be] sunny this weekend.",["is","being"]],
+["Nous habiterons à l'étranger.","We will [live] abroad.",["lives","living"]],
+["Tu m'appelleras ?","[Will] you call me?",["Do","Are"]],
+["Les robots feront nos devoirs.","Robots will [do] our homework.",["does","doing"]],
+["Je ne l'oublierai jamais.","I will [never] forget it.",["ever","not"]],
+["Elle aura seize ans en mai.","She will [be] sixteen in May.",["have","has"]],
+["Ça ne fera pas mal.","It [won't] hurt.",["doesn't","isn't"]],
+["Le train arrivera à midi.","The train will [arrive] at noon.",["arrives","arriving"]],
+["Je prendrai le burger.","I [will] have the burger.",["am","going"]],
+["Est-ce qu'il neigera ?","[Will] it snow?",["Does","Is"]],
+["Nous verrons.","We [will] see.",["are","going"]],
+["Mon frère sera content.","My brother will [be] happy.",["is","being"]],
+["Ils arriveront demain.","They will [arrive] tomorrow.",["arrives","arriving"]],
+["Tu réussiras ton contrôle.","You will [pass] your test.",["passes","passing"]]]},
+{sport:"Règles",title:"Les règles du stage",gram:"Must / have to",rule:"must + verbe sans 'to' = obligation : you must wear trainers. mustn't = interdiction. have to / has to = obligation. don't have to = ce n'est pas obligatoire.",items:[
+["Tu dois porter un casque.","You [must] wear a helmet.",["musts","must to"]],
+["Il ne faut pas courir ici.","You [mustn't] run here.",["don't must","not must"]],
+["Je dois me lever tôt.","I [have] to get up early.",["has","must"]],
+["Elle doit faire ses devoirs.","She [has] to do her homework.",["have","must"]],
+["Nous devons être à l'heure.","We must [be] on time.",["are","to be"]],
+["Tu n'es pas obligée de venir.","You don't [have] to come.",["has","must"]],
+["Il ne faut pas toucher.","You [mustn't] touch.",["don't","not must"]],
+["Les élèves doivent porter un uniforme.","Pupils [must] wear a uniform.",["musts","must to"]],
+["Il ne doit pas utiliser son téléphone.","He [mustn't] use his phone.",["doesn't must","not must"]],
+["Est-ce que je dois partir ?","Do I [have] to leave?",["has","must"]],
+["Elle n'est pas obligée de payer.","She doesn't [have] to pay.",["has","must"]],
+["On doit s'étirer avant de courir.","You must [stretch] before you run.",["stretches","to stretch"]],
+["Il faut écouter l'entraîneuse.","You must [listen] to the coach.",["listens","to listen"]],
+["Nous devons prendre le métro.","We [have] to take the subway.",["has","must"]],
+["Il ne faut pas manger dans le musée.","You [mustn't] eat in the museum.",["don't must","not must"]],
+["Mon père doit travailler samedi.","My father [has] to work on Saturday.",["have","must"]],
+["Tu dois boire de l'eau.","You must [drink] water.",["drinks","to drink"]],
+["Je ne suis pas obligée de ranger.","I don't [have] to tidy up.",["has","must"]],
+["Est-ce qu'elle doit rester ?","Does she [have] to stay?",["has","must"]],
+["Il ne faut pas oublier ton passeport.","You [mustn't] forget your passport.",["don't must","not must"]],
+["Les visiteurs doivent faire la queue.","Visitors [must] wait in line.",["musts","must to"]],
+["Nous devons parler anglais.","We [have] to speak English.",["has","must"]],
+["Tu dois être prête à six heures.","You must [be] ready at six.",["are","to be"]],
+["Il faut respecter les règles.","You must [follow] the rules.",["follows","to follow"]]]},
+{sport:"Conseils",title:"Donner des conseils",gram:"Should",rule:"should + verbe sans 'to' = conseil : you should sleep more. shouldn't = conseil de ne pas faire : you shouldn't worry.",items:[
+["Tu devrais dormir plus.","You [should] sleep more.",["should to","shoulds"]],
+["Elle devrait boire de l'eau.","She should [drink] water.",["drinks","to drink"]],
+["Tu ne devrais pas manger trop de bonbons.","You [shouldn't] eat too many sweets.",["don't should","not should"]],
+["Nous devrions partir maintenant.","We should [leave] now.",["leaves","to leave"]],
+["Que devrais-je faire ?","What [should] I do?",["do","am"]],
+["Il devrait s'excuser.","He should [say] sorry.",["says","to say"]],
+["Tu devrais t'étirer.","You should [stretch].",["stretches","to stretch"]],
+["Je ne devrais pas regarder mon téléphone.","I [shouldn't] look at my phone.",["don't should","not should"]],
+["Devrais-je appeler ma mère ?","[Should] I call my mum?",["Do","Am"]],
+["Tu devrais prendre un parapluie.","You should [take] an umbrella.",["takes","to take"]],
+["Elle ne devrait pas courir si vite.","She [shouldn't] run so fast.",["doesn't should","not should"]],
+["On devrait visiter Central Park.","We should [visit] Central Park.",["visits","to visit"]],
+["Tu devrais demander à ta prof.","You should [ask] your teacher.",["asks","to ask"]],
+["Ils devraient s'entraîner plus.","They should [train] more.",["trains","to train"]],
+["Tu ne devrais pas t'inquiéter.","You [shouldn't] worry.",["don't should","not should"]],
+["Je devrais réviser mon contrôle.","I should [revise] for my test.",["revises","to revise"]],
+["Devrions-nous attendre ?","[Should] we wait?",["Do","Are"]],
+["Tu devrais porter ta veste.","You should [wear] your jacket.",["wears","to wear"]],
+["Il devrait aller chez le médecin.","He should [see] a doctor.",["sees","to see"]],
+["Nous ne devrions pas être bruyants.","We [shouldn't] be noisy.",["don't should","not should"]],
+["Tu devrais goûter ce gâteau.","You should [try] this cake.",["tries","to try"]],
+["Elle devrait se coucher tôt.","She should [go] to bed early.",["goes","to go"]],
+["Tu devrais être gentille avec elle.","You should [be] kind to her.",["are","to be"]],
+["Que devrait-il porter ?","What [should] he wear?",["does","is"]]]},
+{sport:"Descriptions",title:"Préciser de qui on parle",gram:"Who / which / where",rule:"who pour une personne (the girl who dances), which pour une chose ou un animal (the bag which is red), where pour un lieu (the city where I live).",items:[
+["C'est la fille qui danse.","She is the girl [who] dances.",["which","where"]],
+["C'est le sac qui est rouge.","It is the bag [which] is red.",["who","where"]],
+["C'est la ville où j'habite.","It is the city [where] I live.",["who","which"]],
+["J'ai une amie qui parle anglais.","I have a friend [who] speaks English.",["which","where"]],
+["Voici le magasin où j'ai acheté mes baskets.","This is the shop [where] I bought my trainers.",["who","which"]],
+["C'est le film qui m'a fait peur.","It is the film [which] scared me.",["who","where"]],
+["L'homme qui chante est mon oncle.","The man [who] is singing is my uncle.",["which","where"]],
+["C'est le parc où nous courons.","It is the park [where] we run.",["who","which"]],
+["Le chien qui aboie est à moi.","The dog [which] is barking is mine.",["who","where"]],
+["J'aime les gens qui sont gentils.","I like people [who] are kind.",["which","where"]],
+["C'est l'hôtel où nous dormons.","It is the hotel [where] we sleep.",["who","which"]],
+["C'est le livre qui est sur mon bureau.","It is the book [which] is on my desk.",["who","where"]],
+["La prof qui enseigne l'anglais est drôle.","The teacher [who] teaches English is funny.",["which","where"]],
+["C'est la plage où j'ai appris à nager.","It is the beach [where] I learnt to swim.",["who","which"]],
+["Le train qui va à Brooklyn est rapide.","The train [which] goes to Brooklyn is fast.",["who","where"]],
+["C'est le garçon qui a gagné.","He is the boy [who] won.",["which","where"]],
+["C'est le restaurant où nous avons mangé.","It is the restaurant [where] we ate.",["who","which"]],
+["Les chaussures qui sont en vitrine sont chères.","The shoes [which] are in the window are expensive.",["who","where"]],
+["La journaliste qui pose des questions est américaine.","The journalist [who] asks questions is American.",["which","where"]],
+["C'est la salle où nous dansons.","It is the room [where] we dance.",["who","which"]],
+["Le chat qui dort s'appelle Max.","The cat [which] is sleeping is called Max.",["who","where"]],
+["Mon amie qui habite à New York s'appelle Mia.","My friend [who] lives in New York is called Mia.",["which","where"]],
+["C'est le musée où il y a des dinosaures.","It is the museum [where] there are dinosaurs.",["who","which"]],
+["Voici la médaille qui brille.","This is the medal [which] shines.",["who","where"]]]},
+{sport:"Durée",title:"Depuis quand ?",gram:"For / since",rule:"Avec le present perfect, « depuis » + durée = for (for three years), « depuis » + point de départ = since (since 2020, since Monday). Question : How long have you...?",items:[
+["J'habite ici depuis trois ans.","I have lived here [for] three years.",["since","during"]],
+["Elle fait de la gym depuis 2020.","She has done gymnastics [since] 2020.",["for","from"]],
+["Nous sommes à New York depuis lundi.","We have been in New York [since] Monday.",["for","from"]],
+["Je le connais depuis dix ans.","I have known him [for] ten years.",["since","during"]],
+["Il pleut depuis ce matin.","It has rained [since] this morning.",["for","from"]],
+["Elle attend depuis vingt minutes.","She has waited [for] twenty minutes.",["since","during"]],
+["Je n'ai pas vu ma cousine depuis Noël.","I haven't seen my cousin [since] Christmas.",["for","from"]],
+["Ils sont amis depuis longtemps.","They have been friends [for] a long time.",["since","during"]],
+["Il habite à Paris depuis 2019.","He [has] lived in Paris since 2019.",["have","is"]],
+["Nous apprenons l'anglais depuis six ans.","We [have] learnt English for six years.",["has","are"]],
+["Je n'ai pas mangé depuis midi.","I haven't eaten [since] noon.",["for","from"]],
+["Mon père travaille là depuis cinq ans.","My father has worked there [for] five years.",["since","during"]],
+["Depuis combien de temps la connais-tu ?","How [long] have you known her?",["much","many"]],
+["Elle est malade depuis hier.","She has been ill [since] yesterday.",["for","from"]],
+["Je suis dans cette équipe depuis un an.","I have been in this team [for] a year.",["since","during"]],
+["Nous n'avons pas eu cours depuis une semaine.","We haven't had lessons [for] a week.",["since","during"]],
+["Il est là depuis une heure.","He has been here [for] an hour.",["since","during"]],
+["J'ai ce téléphone depuis mon anniversaire.","I have had this phone [since] my birthday.",["for","from"]],
+["Ils vivent à Londres depuis 2015.","They [have] lived in London since 2015.",["has","are"]],
+["Elle joue du piano depuis l'âge de six ans.","She has played the piano [since] she was six.",["for","from"]],
+["Nous attendons depuis des heures !","We have waited [for] hours!",["since","during"]],
+["Il n'a pas neigé depuis deux ans.","It hasn't snowed [for] two years.",["since","during"]],
+["Depuis quand es-tu ici ?","How long [have] you been here?",["are","has"]],
+["Je connais Lily depuis septembre.","I have known Lily [since] September.",["for","from"]]]},
+{sport:"Conditions",title:"Si..., alors...",gram:"If + présent, will",rule:"Condition réelle : if + présent simple, puis will + verbe : If it rains, we will stay at home. Jamais de will juste après if.",items:[
+["S'il pleut, nous resterons à la maison.","If it [rains], we will stay at home.",["will rain","rained"]],
+["Si tu travailles, tu réussiras.","If you work, you [will] pass.",["would","are"]],
+["Si elle gagne, elle sera contente.","If she wins, she will [be] happy.",["is","being"]],
+["Si nous partons maintenant, nous serons à l'heure.","If we [leave] now, we will be on time.",["will leave","left"]],
+["Si tu as faim, je ferai des pancakes.","If you are hungry, I [will] make pancakes.",["would","am"]],
+["S'il fait beau, nous irons à la plage.","If it is sunny, we will [go] to the beach.",["going","goes"]],
+["Si tu ne te dépêches pas, tu rateras le bus.","If you [don't] hurry, you will miss the bus.",["won't","doesn't"]],
+["Si je gagne, j'achèterai un justaucorps doré.","If I win, I will [buy] a gold leotard.",["buying","buys"]],
+["Si elle s'entraîne, elle progressera.","If she [trains], she will improve.",["will train","train"]],
+["S'il neige, nous ferons un bonhomme de neige.","If it snows, we will [make] a snowman.",["making","makes"]],
+["Si tu m'aides, je t'aiderai.","If you help me, I [will] help you.",["would","am"]],
+["Si nous sommes en retard, l'entraîneuse sera en colère.","If we are late, the coach [will] be angry.",["would","is"]],
+["Si tu manges trop, tu seras malade.","If you [eat] too much, you will be ill.",["will eat","ate"]],
+["Si elle appelle, je répondrai.","If she calls, I will [answer].",["answering","answers"]],
+["S'il fait froid, prends ta veste.","If it [is] cold, take your jacket.",["will be","was"]],
+["Si nous gagnons, nous ferons la fête.","If we win, we will [have] a party.",["having","has"]],
+["Si tu ne dors pas, tu seras fatiguée.","If you don't sleep, you [will] be tired.",["would","are"]],
+["Si je vais à New York, je visiterai le MoMA.","If I [go] to New York, I will visit MoMA.",["will go","went"]],
+["Si le film est bien, je le regarderai encore.","If the film is good, I will [watch] it again.",["watching","watches"]],
+["S'il ne vient pas, nous partirons sans lui.","If he [doesn't] come, we will leave without him.",["won't","don't"]],
+["Si tu révises, ce sera facile.","If you revise, it [will] be easy.",["would","is"]],
+["Si elle tombe, elle se relèvera.","If she falls, she will get [up].",["down","on"]],
+["Si nous avons le temps, nous ferons du shopping.","If we [have] time, we will go shopping.",["will have","had"]],
+["Si tu essaies, tu y arriveras.","If you try, you will [succeed].",["succeeding","succeeds"]]]}
+];
+
+const EPISODES=[
+/* Saison 1 */
+{title:"Welcome to London",text:`{N} is twelve and she loves gymnastics. She trains every Monday and every Thursday. Today, she is in [London|Londres] with her [team|équipe]! Their [hotel|hôtel] is near a big park. Every morning, the team runs in the park. Then they have [breakfast|petit-déjeuner] together. {N}'s [coach|entraîneuse], Mrs Taylor, always says: "Smile and work hard!"`,
+q:[["{N} trains every Monday.",true],["The hotel is near the river.",false],["The team has breakfast together.",true]]},
+{title:"The big gym",text:`Today, the team visits a big [gym|gymnase] in London. It is beautiful! {N} can do a [cartwheel|roue] on the [beam|poutre]. Her friend Lily can do the [splits|grand écart], but she can't do a cartwheel. Mrs Taylor watches them. "You can be champions," she says. "But don't forget your [balance|équilibre]!"`,
+q:[["{N} can do a cartwheel on the beam.",true],["Lily can do a cartwheel.",false],["The gym is ugly.",false]]},
+{title:"The dance show",text:`It is Saturday evening. The team is at a dance [show|spectacle] in a theatre. On the [stage|scène], ten dancers are dancing. The [music|musique] is loud and the [costumes|costumes] are red and gold. Lily is eating popcorn. {N} isn't eating. She is watching the [steps|pas] very carefully. "I am learning!" she says.`,
+q:[["The dancers are wearing blue costumes.",false],["Lily is eating popcorn.",true],["{N} is watching the steps.",true]]},
+{title:"The big race",text:`Yesterday was a big day. The team went to the stadium for a [race|course]. {N} was [nervous|nerveuse], but she was ready. The race started at ten o'clock. {N} ran very [fast|vite]. She crossed the [finish line|ligne d'arrivée] in second place! Mrs Taylor shouted: "Well done!" In the evening, {N} was [tired|fatiguée] but very happy.`,
+q:[["{N} won the race.",false],["The race started at ten o'clock.",true],["{N} was happy in the evening.",true]]},
+{title:"Plans for the weekend",text:`This weekend, the team is going to [visit|visiter] London. On Saturday, they are going to take the [underground|métro] to Tower [Bridge|pont]. Lily is going to buy a big [map|plan]. On Sunday, it is going to rain, so {N} is going to take her [umbrella|parapluie]. "We are going to have a great weekend!" she says.`,
+q:[["They are going to take the bus.",false],["It is going to rain on Sunday.",true],["{N} is going to buy a map.",false]]},
+{title:"Shopping on Oxford Street",text:`{N} and Lily are in a sports [shop|magasin] on Oxford Street. There is a big [sale|soldes] today! {N} wants new [trainers|baskets]. The white trainers are [cheaper|moins chères] than the pink ones, but the pink ones are [prettier|plus jolies]. "How much are the pink trainers?" she asks. "They're forty pounds," says the shop assistant. In the end, {N} buys the white trainers. They are the [cheapest|les moins chères] in the shop!`,
+q:[["The pink trainers are cheaper.",false],["There is a sale today.",true],["{N} buys the white trainers.",true]]},
+{title:"The interview",text:`A [journalist|journaliste] meets the team after the competition. "Do you like London?" she asks. "Yes, we love it!" says {N}. "Where do you train in France?" "We train in a small gym near our [school|collège]." "Does your [coach|entraîneuse] speak English?" "Yes, she does. She speaks very well!" "And what did you [win|gagner] today?" "I won a gold [medal|médaille]!"`,
+q:[["The journalist meets the team before the competition.",false],["Their coach speaks English.",true],["{N} won a gold medal.",true]]},
+{title:"Goodbye, London!",text:`It is the last day of the [training camp|stage]. {N} has learnt a lot. She has [improved|progressé] on the beam, she has visited Tower Bridge and she has made new [friends|amis]. Lily has bought ten T-shirts! Mrs Taylor is [proud|fière]: "You have worked very hard. I have never had a better team!" {N} has never been so happy. "See you soon, London!"`,
+q:[["{N} has visited Tower Bridge.",true],["Lily has bought ten hoodies.",false],["Mrs Taylor is proud of the team.",true]]},
+/* Saison 2 */
+{title:"Hello, New York!",text:`The team has arrived in New York! The [airport|aéroport] is huge and there are many people. At the hotel, Mrs Taylor says: "We haven't got any [food|nourriture]. Let's go to the [supermarket|supermarché]!" {N} buys some bread, some cheese and some apples. Lily wants some sweets, but Mrs Taylor says: "We haven't got much [money|argent]!" How many apples does {N} buy? Six!`,
+q:[["The team has got a lot of food at the hotel.",false],["{N} buys some apples.",true],["Mrs Taylor buys sweets for Lily.",false]]},
+{title:"A rainy day in the park",text:`Yesterday, it was raining in New York. {N} and Lily were walking in Central Park. They were [talking|discutaient] about the competition. Suddenly, a [squirrel|écureuil] jumped on Lily's bag! Lily was [scared|effrayée]. {N} was laughing. When they arrived at the hotel, they were [wet|mouillées] but happy.`,
+q:[["It was sunny yesterday.",false],["A squirrel jumped on Lily's bag.",true],["{N} was scared.",false]]},
+{title:"The fortune teller",text:`In Times Square, a [fortune teller|voyante] looks at {N}'s hand. "You will be a great [gymnast|gymnaste]," she says. "You will travel a lot and you will meet a famous [singer|chanteur]." Lily laughs: "And me?" "You will eat a lot of [pancakes|pancakes]!" Everyone laughs. "I don't believe it," says {N}, "but I will work hard!"`,
+q:[["The fortune teller looks at {N}'s hand.",true],["Lily will be a famous singer.",false],["{N} will work hard.",true]]},
+{title:"The rules",text:`Today, the team trains in a big gym in Brooklyn. The [rules|règles] are on the wall: "You must wear [trainers|baskets]. You mustn't eat in the gym. You must listen to the coach." {N} has to [warm up|s'échauffer] for twenty minutes. Lily thinks she doesn't have to warm up, but Mrs Taylor says: "Rules are rules, Lily. You have to warm up too!"`,
+q:[["You can eat in the gym.",false],["{N} has to warm up.",true],["Lily doesn't have to warm up.",false]]},
+{title:"A bad day",text:`{N} is [sad|triste]. She fell from the beam this morning and her knee [hurts|fait mal]. Lily gives her [advice|des conseils]: "You should rest. You shouldn't train this afternoon. You should put ice on your knee." Mrs Taylor agrees: "You should listen to Lily! You will be ready for the competition." In the evening, {N} feels better.`,
+q:[["{N} fell from the beam.",true],["Lily says {N} should train this afternoon.",false],["{N} feels better in the evening.",true]]},
+{title:"A new friend",text:`At the gym, {N} meets Mia, a girl who lives in New York. Mia shows her the [places|endroits] where she likes to go: a café which sells huge [cookies|cookies], a park where people dance, and a shop which sells [vintage|vintage] clothes. "You are the friend who I needed!" says {N}. They exchange [phone numbers|numéros de téléphone].`,
+q:[["Mia lives in London.",false],["The café sells huge cookies.",true],["{N} and Mia exchange phone numbers.",true]]},
+{title:"How long?",text:`A journalist interviews {N} again. "How long have you done gymnastics?" "I have done gymnastics since I was six." "And how long have you been in New York?" "We have been here for ten days." "Do you like it here?" "I love it! I have made new [friends|amis] and I have [improved|progressé] a lot." The journalist smiles: "You will be a [star|star]!"`,
+q:[["{N} has done gymnastics since she was six.",true],["The team has been in New York for two weeks.",false],["{N} has made new friends.",true]]},
+{title:"The final",text:`It is the day of the big [final|finale]. Mrs Taylor talks to the team: "If you stay calm, you will do well. If you make a mistake, don't worry. Keep going!" {N} is [nervous|nerveuse]. Her routine is [perfect|parfaite] and the judges give her nine point eight! If she wins, she will go home with a gold medal... And she wins! "See you next season!" says {N}.`,
+q:[["Mrs Taylor says: if you stay calm, you will do well.",true],["The judges give {N} eight point nine.",false],["{N} wins the final.",true]]}
+];
+
+/* Boutique. lock : t/m = médaille m à l'épreuve t ; gold = nb de médailles d'or ; medals = nb de médailles ; season = saison atteinte ; weeks = défis de la semaine réussis (exclusivités gratuites). */
+const SHOP=[
+{id:"lt_navy",cat:"leotard",name:"navy leotard",price:0,color:"#2B2D6E"},
+{id:"lt_green",cat:"leotard",name:"green leotard",price:180,color:"#2FAE73"},
+{id:"lt_sky",cat:"leotard",name:"sky blue leotard",price:220,color:"#45B3F0"},
+{id:"lt_pink",cat:"leotard",name:"pink leotard",price:270,color:"#F06AA8"},
+{id:"lt_purple",cat:"leotard",name:"purple leotard",price:330,color:"#5B3DF5"},
+{id:"lt_coral",cat:"leotard",name:"coral leotard",price:390,color:"#FF6B4A"},
+{id:"lt_red",cat:"leotard",name:"red leotard",price:450,color:"#E5484D"},
+{id:"lt_black",cat:"leotard",name:"black leotard",price:520,color:"#22202E"},
+{id:"lt_turq",cat:"leotard",name:"turquoise leotard",price:630,color:"#14B8A6"},
+{id:"lt_lilac",cat:"leotard",name:"lilac leotard",price:720,color:"#B79CF5"},
+{id:"lt_usa",cat:"leotard",name:"New York leotard",price:820,color:"#2F6FE4",lock:{season:2,label:"Saison 2"}},
+{id:"lt_silver",cat:"leotard",name:"silver leotard",price:980,color:"#B9BFCC",lock:{medals:8,label:"8 médailles"}},
+{id:"lt_gold",cat:"leotard",name:"gold leotard",price:1350,color:"#E9B949",lock:{t:2,m:3,label:"Or à l'épreuve 3"}},
+{id:"lt_champ",cat:"leotard",name:"champion leotard",price:0,color:"#0E8F8A",lock:{weeks:2,label:"2 défis de la semaine"}},
+{id:"lt_diamond",cat:"leotard",name:"diamond leotard",price:0,color:"#9AD7F5",lock:{weeks:12,label:"12 défis de la semaine"}},
+{id:"sh_white",cat:"shoes",name:"white trainers",pl:true,price:0,color:"#FFFFFF"},
+{id:"sh_black",cat:"shoes",name:"black trainers",pl:true,price:150,color:"#22202E"},
+{id:"sh_pink",cat:"shoes",name:"pink trainers",pl:true,price:210,color:"#F06AA8"},
+{id:"sh_orange",cat:"shoes",name:"orange trainers",pl:true,price:270,color:"#FF8A3D"},
+{id:"sh_blue",cat:"shoes",name:"blue trainers",pl:true,price:330,color:"#2F6FE4"},
+{id:"sh_green",cat:"shoes",name:"green trainers",pl:true,price:390,color:"#2FAE73"},
+{id:"sh_purple",cat:"shoes",name:"purple trainers",pl:true,price:480,color:"#8B5CF6"},
+{id:"sh_silver",cat:"shoes",name:"silver trainers",pl:true,price:750,color:"#B9BFCC",lock:{season:2,label:"Saison 2"}},
+{id:"sh_gold",cat:"shoes",name:"gold trainers",pl:true,price:1120,color:"#E9B949",lock:{t:3,m:3,label:"Or à l'épreuve 4"}},
+{id:"sh_sparkly",cat:"shoes",name:"sparkly trainers",pl:true,price:0,color:"#F7DD94",lock:{weeks:4,label:"4 défis de la semaine"}},
+{id:"sh_platinum",cat:"shoes",name:"platinum trainers",pl:true,price:0,color:"#D9DDE3",lock:{weeks:20,label:"20 défis de la semaine"}},
+{id:"ac_headband",cat:"acc",kind:"headband",name:"red headband",price:120,color:"#E5484D"},
+{id:"ac_bow",cat:"acc",kind:"bow",name:"purple bow",price:150,color:"#8B5CF6"},
+{id:"ac_cap",cat:"acc",kind:"cap",name:"blue cap",price:200,color:"#2F6FE4"},
+{id:"ac_ybb",cat:"acc",kind:"headband",name:"yellow headband",price:220,color:"#F5C518"},
+{id:"ac_pbow",cat:"acc",kind:"bow",name:"pink bow",price:270,color:"#F06AA8"},
+{id:"ac_gcap",cat:"acc",kind:"cap",name:"green cap",price:330,color:"#2FAE73"},
+{id:"ac_glasses",cat:"acc",kind:"glasses",name:"sunglasses",pl:true,price:450,color:"#45B3F0"},
+{id:"ac_phones",cat:"acc",kind:"phones",name:"headphones",pl:true,price:600,color:"#5B3DF5"},
+{id:"ac_nycap",cat:"acc",kind:"cap",name:"New York cap",price:680,color:"#22202E",lock:{season:2,label:"Saison 2"}},
+{id:"ac_medal",cat:"acc",kind:"medal",name:"gold medal necklace",price:750,color:"#E9B949",lock:{gold:3,label:"3 médailles d'or"}},
+{id:"ac_crown",cat:"acc",kind:"crown",name:"crown",price:1800,color:"#E9B949",lock:{gold:8,label:"8 médailles d'or"}},
+{id:"ac_mint",cat:"acc",kind:"headband",name:"mint headband",price:0,color:"#7ED9B5",lock:{weeks:1,label:"1 défi de la semaine"}},
+{id:"ac_rainbow",cat:"acc",kind:"bow",name:"rainbow bow",price:0,color:"#FF6B4A",lock:{weeks:8,label:"8 défis de la semaine"}},
+{id:"ac_gphones",cat:"acc",kind:"phones",name:"golden headphones",pl:true,price:0,color:"#E9B949",lock:{weeks:16,label:"16 défis de la semaine"}},
+{id:"bg_lilac",cat:"bg",name:"lilac room",price:0,color:"#ECE8FF"},
+{id:"bg_gym",cat:"bg",name:"gym",price:300,color:"#DCE8FF"},
+{id:"bg_studio",cat:"bg",name:"dance studio",price:380,color:"#FFE6F1"},
+{id:"bg_track",cat:"bg",name:"running track",price:450,color:"#FFD9CC"},
+{id:"bg_london",cat:"bg",name:"London",price:520,color:"#D5F0EE"},
+{id:"bg_beach",cat:"bg",name:"beach",price:680,color:"#FFF1C9"},
+{id:"bg_ny",cat:"bg",name:"New York",price:820,color:"#FFE58A",lock:{season:2,label:"Saison 2"}},
+{id:"bg_night",cat:"bg",name:"starry night",price:0,color:"#2B2D6E",lock:{weeks:6,label:"6 défis de la semaine"}},
+{id:"bg_fame",cat:"bg",name:"hall of fame",price:0,color:"#3A2E7A",lock:{weeks:24,label:"24 défis de la semaine"}}
+];
+
+/* ===== SAUVEGARDE EN LIGNE OPTIONNELLE (Firebase Firestore, offre gratuite, aucun compte pour l'enfant) =====
+   Laissé vide : la progression reste sur le téléphone (localStorage + IndexedDB) avec export manuel.
+   Pour l'activer :
+   1. console.firebase.google.com > Créer un projet.
+   2. Firestore Database > Créer une base (mode production).
+   3. Onglet Règles, coller puis publier :
+        rules_version = '2';
+        service cloud.firestore {
+          match /databases/{database}/documents {
+            match /backups/{code} {
+              allow get: if code.size() == 12;
+              allow create, update: if code.size() == 12 && request.resource.data.keys().hasOnly(['data', 'updatedAt']);
+              match /days/{day} {
+                allow get: if code.size() == 12 && day.size() == 10;
+                allow create, update: if code.size() == 12 && day.size() == 10 && request.resource.data.keys().hasOnly(['data', 'updatedAt']);
+              }
+            }
+          }
+        }
+   4. Paramètres du projet > Vos applications > Web (</>) : copier apiKey et projectId ci-dessous.
+   Chaque téléphone reçoit un code de sauvegarde unique (ex. K7PM-3XQ9-WD2F), visible dans l'espace parent.
+   Ce code suffit pour tout récupérer sur un nouveau téléphone ; la liste des sauvegardes n'est pas lisible.
+   Une copie datée est gardée pour chaque jour d'utilisation (backups/CODE/days/AAAA-MM-JJ) et n'est jamais effacée par l'app.
+   Une copie moins avancée n'écrase jamais une copie en ligne plus avancée (sauf restauration volontaire par le parent).
+   PIN parent oublié : dans la console du navigateur, taper  S.pin=null;save()  */
+const CLOUD={projectId:"",apiKey:""};
+function cloudOn(){return !!(CLOUD.projectId&&CLOUD.apiKey)}
+
+/* ===== RÉGLAGES DU RYTHME (pour tenir environ 6 mois) ===== */
+const MIN_DAYS=11;       /* jours minimum entre l'ouverture de deux épreuves (16 épreuves = environ 6 mois) */
+const NEW_WORDS=4;       /* mots nouveaux par séance (les paquets s'ouvrent au rythme des épreuves) */
+const FRAGILE_MAX=20;    /* pas de nouveaux mots tant que 20 mots récents ne sont pas consolidés */
+const DUE_MAX=24;        /* au-delà de 24 mots à revoir, la séance fait une révision complète au lieu de nouveaux mots */
+const DAILY_CAP=150;     /* au-delà de 150 pièces gagnées dans la journée en exercices, une bonne réponse ne rapporte plus que 1 pièce */
+const WEEK_GOAL=5;       /* séances complètes par semaine pour réussir le défi */
+const INTERVALS=[1,1,3,7,14,30]; /* jours avant la prochaine révision selon le niveau du mot (0 à 5) */
+
+/* ===== ÉTAT LOCAL (aucun compte, aucune IA) ===== */
+const KEY="englishChampion_v1";
+function defaultState(){return {v:2,name:"",coins:0,streak:0,streakDay:null,words:{},themes:{},eps:{},owned:["lt_navy","sh_white","bg_lilac"],equip:{leotard:"lt_navy",shoes:"sh_white",acc:null,bg:"bg_lilac"},sprintBest:0,daily:null,time:{},act:{},done:{},weeks:0,weekClaimed:null,pin:null,settings:{mic:true},start:null,unlockNote:null,backupCode:null,updatedAt:null,cloudAt:null,lastExport:null,earned:{}}}
+function parseState(raw){try{const o=typeof raw==="string"?JSON.parse(raw):raw;if(o&&typeof o==="object"&&o.words)return Object.assign(defaultState(),o)}catch(e){}return null}
+function load(){try{return parseState(localStorage.getItem(KEY))}catch(e){return null}}
+let IDB=null;
+function idbOpen(){return new Promise(res=>{try{const r=indexedDB.open("englishChampion",1);r.onupgradeneeded=()=>r.result.createObjectStore("kv");r.onsuccess=()=>{IDB=r.result;res(IDB)};r.onerror=()=>res(null)}catch(e){res(null)}})}
+function idbPut(raw){if(!IDB)return;try{IDB.transaction("kv","readwrite").objectStore("kv").put(raw,KEY)}catch(e){}}
+function idbGet(){return new Promise(res=>{if(!IDB)return res(null);try{const q=IDB.transaction("kv").objectStore("kv").get(KEY);q.onsuccess=()=>res(q.result||null);q.onerror=()=>res(null)}catch(e){res(null)}})}
+function writeLocal(){const raw=JSON.stringify(S);try{localStorage.setItem(KEY,raw)}catch(e){}idbPut(raw)}
+function save(){S.updatedAt=new Date().toISOString();dailySnap();writeLocal();schedulePush()}
+/* niveau de progression d'une sauvegarde : sert à ne jamais remplacer une copie avancée par une copie moins avancée */
+function prog(x){return x?Object.keys(x.words||{}).length+Object.values(x.themes||{}).reduce((a,t)=>a+((t&&t.tries)||0),0)+Object.keys(x.eps||{}).length+Object.keys(x.act||{}).length:-1}
+/* historique local : une copie par jour (30 derniers jours) + une copie avant chaque opération risquée */
+function idbKeys(){return new Promise(res=>{if(!IDB)return res([]);try{const q=IDB.transaction("kv").objectStore("kv").getAllKeys();q.onsuccess=()=>res(q.result||[]);q.onerror=()=>res([])}catch(e){res([])}})}
+function idbGetKey(k){return new Promise(res=>{if(!IDB)return res(null);try{const q=IDB.transaction("kv").objectStore("kv").get(k);q.onsuccess=()=>res(q.result||null);q.onerror=()=>res(null)}catch(e){res(null)}})}
+function idbDel(k){if(!IDB)return;try{IDB.transaction("kv","readwrite").objectStore("kv").delete(k)}catch(e){}}
+function snapshot(tag){if(!IDB||!hasProgress())return;try{IDB.transaction("kv","readwrite").objectStore("kv").put(JSON.stringify(S),"snap:"+tag)}catch(e){}}
+function dailySnap(){const t=today();if(S.lastSnap===t||!IDB||!hasProgress())return;snapshot(t);S.lastSnap=t;pruneSnaps()}
+async function pruneSnaps(){const ks=(await idbKeys()).filter(k=>String(k).startsWith("snap:"));const days=ks.filter(k=>/^snap:\d{4}-\d{2}-\d{2}$/.test(k)).sort();const ops=ks.filter(k=>!/^snap:\d{4}-\d{2}-\d{2}$/.test(k)).sort();
+  days.slice(0,Math.max(0,days.length-30)).forEach(idbDel);ops.slice(0,Math.max(0,ops.length-10)).forEach(idbDel)}
+function safetySnap(op){snapshot("avant "+op+" "+new Date().toISOString().slice(0,16).replace("T"," "))}
+function genCode(){const a="ABCDEFGHJKLMNPQRSTUVWXYZ23456789";const r=crypto.getRandomValues(new Uint32Array(12));let s="";for(let i=0;i<12;i++){s+=a[r[i]%a.length];if(i===3||i===7)s+="-"}return s}
+function cleanCode(c){return String(c||"").toUpperCase().replace(/[^A-Z0-9]/g,"")}
+function docUrl(code,day){return "https://firestore.googleapis.com/v1/projects/"+encodeURIComponent(CLOUD.projectId)+"/databases/(default)/documents/backups/"+cleanCode(code)+(day?"/days/"+day:"")+"?key="+encodeURIComponent(CLOUD.apiKey)}
+let pushT=null;
+let lastCheck=0;
+function schedulePush(){if(!cloudOn()||!S.backupCode)return;clearTimeout(pushT);pushT=setTimeout(cloudPush,8000)}
+async function cloudPush(){if(!cloudOn()||!S.backupCode||!navigator.onLine)return false;
+  try{/* garde-fou : avant chaque envoi, on vérifie qu'on ne remplace pas une copie en ligne plus avancée */
+    {lastCheck=Date.now();const remote=await cloudGet(S.backupCode);
+      if(remote&&prog(remote)>prog(S)&&(remote.updatedAt||"")>(S.resetAt||"")){S.cloudAhead=true;writeLocal();return false}}
+    S.cloudAhead=false;const body=JSON.stringify({fields:{data:{stringValue:JSON.stringify(S)},updatedAt:{stringValue:S.updatedAt||""}}});
+    const r=await fetch(docUrl(S.backupCode),{method:"PATCH",headers:{"Content-Type":"application/json"},body});
+    /* le jour d'une restauration volontaire, on ne touche pas à la copie datée du jour (elle garde la version d'avant) */
+    let r2={ok:true};if(!(S.resetAt&&S.resetAt.slice(0,10)===new Date().toISOString().slice(0,10)))r2=await fetch(docUrl(S.backupCode,today()),{method:"PATCH",headers:{"Content-Type":"application/json"},body});
+    if(r.ok&&r2.ok){S.cloudAt=new Date().toISOString();writeLocal();return true}}catch(e){}return false}
+async function cloudGet(code,day){const r=await fetch(docUrl(code,day));if(!r.ok)return null;const j=await r.json();return parseState(j&&j.fields&&j.fields.data&&j.fields.data.stringValue)}
+function adopt(st,op){const code=S.backupCode,pin=S.pin;safetySnap(op);S=st;S.backupCode=code||st.backupCode;if(!S.pin)S.pin=pin;normalize();S.resetAt=new Date().toISOString();save();if(cloudOn()){clearTimeout(pushT);cloudPush()}}
+function hasProgress(){return Object.keys(S.words).length>0}
+function needExport(){if(cloudOn()||!hasProgress())return false;if(!S.lastExport)return Object.keys(S.act).length>=3;return addDays(S.lastExport.slice(0,10),7)<=today()}
+let S=load()||defaultState();
+let V={name:"boot"};
+let RUN=null,SPRINT=null,EP=null,CTX=null,toastT=null,lastAct=0;
+
+/* ===== OUTILS ===== */
+function dstr(d){return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
+function today(){return dstr(new Date())}
+function pdate(s){const p=s.split("-").map(Number);return new Date(p[0],p[1]-1,p[2])}
+function addDays(s,n){const x=pdate(s);x.setDate(x.getDate()+n);return dstr(x)}
+function dayDiff(a,b){return Math.round((pdate(b)-pdate(a))/86400000)}
+function weekStart(s){const x=pdate(s);const d=(x.getDay()+6)%7;x.setDate(x.getDate()-d);return dstr(x)}
+function shuffle(a){a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function pick(a){return a[Math.floor(Math.random()*a.length)]}
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function cap(s){return s.charAt(0).toUpperCase()+s.slice(1)}
+function fr1(n){return String(n).replace(".",",")}
+function addCoins(n){S.coins=Math.max(0,(S.coins||0)+n)}
+function earn(n){const t=today();if(!S.earned||typeof S.earned!=="object")S.earned={};const e=S.earned[t]||0;const g=e>=DAILY_CAP?Math.min(1,n):n;S.earned[t]=e+g;addCoins(g);return g}
+function markAct(){const t=today();S.act[t]=(S.act[t]||0)+1}
+function addTime(sec){if(sec>0){const t=today();S.time[t]=(S.time[t]||0)+Math.min(sec,900)}}
+function shuffleNot(arr){let s,n=0;const ref=arr.map(x=>x.t).join("|");do{s=shuffle(arr);n++}while(n<12&&s.map(x=>x.t).join("|")===ref);return s}
+
+/* ===== VOIX (synthèse et reconnaissance du téléphone) ===== */
+let VOICE=null;
+function pickVoice(){try{const vs=speechSynthesis.getVoices();VOICE=vs.find(v=>/en[-_]GB/i.test(v.lang))||vs.find(v=>/^en/i.test(v.lang))||null}catch(e){}}
+if("speechSynthesis" in window){pickVoice();speechSynthesis.onvoiceschanged=pickVoice}
+function utter(t,slow){const u=new SpeechSynthesisUtterance(t);u.lang=VOICE?VOICE.lang:"en-GB";if(VOICE)u.voice=VOICE;u.rate=slow?0.65:0.9;return u}
+/* iPhone : la voix doit partir directement dans le geste (pas de délai), sinon Safari la bloque */
+function speak(t,slow){if(!("speechSynthesis" in window))return;try{speechSynthesis.cancel();speechSynthesis.speak(utter(t,slow))}catch(e){}}
+function speakSeq(parts,slow,onEnd){if(!("speechSynthesis" in window)){onEnd&&onEnd();return}try{speechSynthesis.cancel();parts.forEach((p,i)=>{const u=utter(p,slow);if(i===parts.length-1)u.onend=onEnd;speechSynthesis.speak(u)})}catch(e){onEnd&&onEnd()}}
+function stopSpeech(){if("speechSynthesis" in window)speechSynthesis.cancel()}
+const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+function micOk(){return !!SR&&S.settings.mic!==false}
+const NUM={"0":"zero","1":"one","2":"two","3":"three","4":"four","5":"five","6":"six","7":"seven","8":"eight","9":"nine","10":"ten","11":"eleven","12":"twelve","15":"fifteen","20":"twenty"};
+function normWords(s){return s.toLowerCase().replace(/[’‘`]/g,"'").replace(/\bwon't\b/g,"will not").replace(/\bcan't\b|\bcannot\b/g,"can not").replace(/n't\b/g," not").replace(/'m\b/g," am").replace(/'re\b/g," are").replace(/'ll\b/g," will").replace(/'ve\b/g," have").replace(/'s\b/g," s").replace(/'d\b/g," would")
+  .replace(/[^a-z0-9 ]/g," ").split(/\s+/).filter(Boolean).map(w=>NUM[w]||w)}
+function lcs(a,b){const m=a.length,n=b.length;const d=Array.from({length:m+1},()=>new Array(n+1).fill(0));for(let i=1;i<=m;i++)for(let j=1;j<=n;j++)d[i][j]=a[i-1]===b[j-1]?d[i-1][j-1]+1:Math.max(d[i-1][j],d[i][j-1]);return d[m][n]}
+function matchScore(target,heard){const t=normWords(target),h=normWords(heard);if(!t.length)return 0;return lcs(t,h)/t.length}
+
+/* ===== ICÔNES ===== */
+const IC={
+back:'<path d="M15 18l-6-6 6-6"/>',close:'<path d="M6 6l12 12M18 6L6 18"/>',
+home:'<path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/>',
+cards:'<rect x="3" y="6" width="13" height="15" rx="2"/><path d="M8 3h11a2 2 0 0 1 2 2v12"/>',
+story:'<path d="M3 14v-2a9 9 0 0 1 18 0v2"/><rect x="3" y="14" width="4" height="7" rx="1.5"/><rect x="17" y="14" width="4" height="7" rx="1.5"/>',
+bag:'<path d="M5 8h14l-1 13H6z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/>',
+sound:'<path d="M11 5L6 9H3v6h3l5 4z" fill="currentColor"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 5.5a9 9 0 0 1 0 13"/>',
+check:'<polyline points="20 6 9 17 4 12"/>',lock:'<rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>',
+play:'<polygon points="7 4 20 12 7 20" fill="currentColor"/>',pause:'<rect x="6" y="5" width="4" height="14" rx="1" fill="currentColor"/><rect x="14" y="5" width="4" height="14" rx="1" fill="currentColor"/>',
+bulb:'<path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3z"/>',
+bolt:'<path d="M13 2L4 14h7l-1 8 9-12h-7z"/>',chev:'<path d="M9 6l6 6-6 6"/>',
+star:'<path d="M12 3l2.6 5.6 6 .7-4.5 4.1 1.2 6L12 16.9l-5.3 2.5 1.2-6-4.5-4.1 6-.7z"/>',
+note:'<path d="M9 18V5l11-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="17" cy="16" r="3"/>',
+watch:'<circle cx="12" cy="14" r="7"/><path d="M12 14v-4M10 3h4M12 3v4"/>',
+shirt:'<path d="M8 3L3 7l3 3 2-1v12h8V9l2 1 3-3-5-4a4 4 0 0 1-8 0z"/>',
+book:'<path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 5v16"/>',
+sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',
+umbrella:'<path d="M3 12a9 9 0 0 1 18 0z"/><path d="M12 12v7a2 2 0 0 1-4 0"/>',
+user:'<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><circle cx="17" cy="9" r="2.5"/><path d="M16 14.2a5 5 0 0 1 5.5 5.8"/>',
+apple:'<path d="M12 7c-1-2-3-3-5-2-3 1-3 6-1 10 1 2 3 4 4 4s1-.5 2-.5 1 .5 2 .5 3-2 4-4c2-4 2-9-1-10-2-1-4 0-5 2z"/><path d="M12 7c0-2 1-4 3-4"/>',
+heart:'<path d="M12 20s-7-4.5-9-9a4.5 4.5 0 0 1 9-3 4.5 4.5 0 0 1 9 3c-2 4.5-9 9-9 9z"/>',
+paw:'<circle cx="7" cy="9" r="2"/><circle cx="12" cy="6" r="2"/><circle cx="17" cy="9" r="2"/><path d="M12 12c-3 0-6 4-6 6a2 2 0 0 0 2 2c1.5 0 2.5-1 4-1s2.5 1 4 1a2 2 0 0 0 2-2c0-2-3-6-6-6z"/>',
+cloud:'<path d="M7 18h10a4 4 0 0 0 0-8 6 6 0 0 0-11.5 1.5A3.5 3.5 0 0 0 7 18z"/>',
+smile:'<circle cx="12" cy="12" r="9"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><path d="M9 9h.01M15 9h.01"/>',
+game:'<rect x="2" y="7" width="20" height="11" rx="4"/><path d="M7 11v4M5 13h4"/><path d="M15 12h.01M18 14h.01"/>',
+tree:'<path d="M12 3l6 8h-3l4 6H5l4-6H6z"/><path d="M12 17v4"/>',
+plane:'<path d="M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5z"/>',
+fork:'<path d="M7 2v8a2 2 0 0 0 4 0V2M9 10v12"/><path d="M17 2c-2 0-3 3-3 6s1 4 3 4v10"/>',
+briefcase:'<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 13h18"/>',
+eye:'<path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',
+building:'<rect x="5" y="3" width="10" height="18"/><path d="M15 9h4v12H5M9 7h2M9 11h2M9 15h2"/>',
+clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+mic:'<rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0M12 17v4"/>',
+trophy:'<path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0z"/><path d="M17 5h3a3 3 0 0 1-3 4M7 5H4a3 3 0 0 0 3 4"/>'
+};
+function ic(n,s=22,w=2){return `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${IC[n]||IC.star}</svg>`}
+const FLAME='<svg width="18" height="18" viewBox="0 0 24 24" fill="#FF6B4A" aria-hidden="true"><path d="M12 2c1 3.5 5 5.5 5 10.5a5 5 0 0 1-10 0c0-2.4 1.2-3.8 2.4-4.8 0 2.2 1.1 3.3 2.3 3.3 0-3.5-1.2-5.6.3-9z"/></svg>';
+const COIN='<svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="#E9B949"/><circle cx="12" cy="12" r="5.5" fill="none" stroke="#B8871A" stroke-width="2"/></svg>';
+
+/* ===== MOTS ===== */
+const WORDS=[];PACKS.forEach((p,pi)=>p.words.forEach((w,i)=>WORDS.push({id:p.id+":"+i,pack:pi,en:w[0],fr:w[1],exEn:w[2],exFr:w[3]})));
+const WBY={};WORDS.forEach(w=>WBY[w.id]=w);
+function ws(id){return S.words[id]||(S.words[id]={box:0,due:null,seen:false,known:false,right:0,wrong:0})}
+function wbox(id){const x=S.words[id];return x?x.box:0}
+function isSeen(id){const x=S.words[id];return !!(x&&x.seen)}
+function isLearnt(id){const x=S.words[id];return !!(x&&x.seen&&x.box>=2)}
+function isMastered(id){const x=S.words[id];return !!(x&&x.box>=4)}
+function dueWords(){const t=today();return WORDS.filter(w=>{const x=S.words[w.id];return x&&x.seen&&x.due&&x.due<=t}).sort((a,b)=>S.words[a.id].due<S.words[b.id].due?-1:1)}
+function fragileCount(){return WORDS.filter(w=>{const x=S.words[w.id];return x&&x.seen&&x.box<2}).length}
+function openedThemes(){return TH.filter((t,i)=>themeOpen(i)).length}
+function packsOpen(){return Math.min(PACKS.length,2+Math.ceil(openedThemes()*1.4))}
+function packOpen(pi){return pi<packsOpen()}
+function packStats(pi){const l=WORDS.filter(w=>w.pack===pi);return {total:l.length,seen:l.filter(w=>isSeen(w.id)).length,learnt:l.filter(w=>isLearnt(w.id)).length}}
+function nextPack(){for(let i=0;i<packsOpen();i++)if(packStats(i).seen<PACKS[i].words.length)return i;return -1}
+function gradeWord(w,ok){const x=ws(w.id);const t=today();if(!x.seen){x.seen=true;x.seenOn=t}
+  if(ok){x.right++;x.box=Math.min(5,(x.box||0)+((x.known&&x.box<2)?2:1));if(x.box>=2&&!x.learntOn)x.learntOn=t}else{x.wrong++;x.lastWrong=t;x.box=Math.max(0,(x.box||0)-2)}
+  x.due=addDays(t,INTERVALS[x.box])}
+
+/* ===== ÉPREUVES (déblocage étalé dans le temps) ===== */
+const TH=THEMES.map(t=>({...t,items:t.items.map(([fr,en,opts])=>{const m=en.match(/\[(.+?)\]/);return {fr,plain:en.replace(/\[|\]/g,""),target:m[1],before:en.slice(0,m.index),after:en.slice(m.index+m[0].length),opts}})}));
+function ts(i){return S.themes[i]||(S.themes[i]={best:0,medal:0,tries:0,openedAt:null,medalOn:null})}
+function themeOpen(i){return !!ts(i).openedAt}
+function refreshUnlocks(){if(!ts(0).openedAt)ts(0).openedAt=S.start||today();let ch=null;
+  for(let i=1;i<TH.length;i++){const t=ts(i);if(t.openedAt)continue;const p=ts(i-1);if(p.medal>=2&&addDays(p.openedAt,MIN_DAYS)<=today()){t.openedAt=today();ch=i}break}
+  if(ch!=null){S.unlockNote=ch;save()}return ch}
+function waitInfo(i){if(i===0||themeOpen(i))return null;const p=ts(i-1);if(!themeOpen(i-1))return {txt:"Épreuve précédente à débloquer"};if(p.medal<2)return {txt:"Argent (8/10) à l'épreuve "+i};
+  const d=dayDiff(today(),addDays(p.openedAt,MIN_DAYS));return {txt:d<=1?"S'ouvre demain":"S'ouvre dans "+d+" jours",days:d}}
+function currentTheme(){let last=0;for(let i=0;i<TH.length;i++){if(!themeOpen(i))break;last=i;if(ts(i).medal<2)return i}return last}
+function seasonOf(i){return i<8?1:2}
+function seasonReached(n){return n<=1||themeOpen(8)}
+function epOpen(i){return ts(i).medal>=1}
+function medalCount(m){return TH.filter((t,i)=>ts(i).medal===m).length}
+function medalsTotal(){return TH.filter((t,i)=>ts(i).medal>=1).length}
+const MEDAL_NAME=["Pas encore","Bronze","Argent","Or"];
+
+/* ===== CONSTRUCTION DES EXERCICES ===== */
+function wordOpts(w,field){const out=[w[field]];for(const x of shuffle(WORDS.filter(x=>x.pack===w.pack&&x.id!==w.id))){if(out.length>=4)break;if(!out.includes(x[field]))out.push(x[field])}return shuffle(out)}
+function canSpell(w){return /^[a-z]{3,9}$/i.test(w.en)}
+function wordItem(w,kinds){const ks=kinds.filter(k=>k!=="spell"||canSpell(w));const k=pick(ks);
+  if(k==="spell")return {k,w,bank:shuffleNot(w.en.toLowerCase().split("").map((c,i)=>({id:i,t:c}))),ans:[]};
+  return {k,w,opts:wordOpts(w,k==="en2fr"?"fr":"en")}}
+function gramItem(ti,si,kind){const s=TH[ti].items[si];const k=kind||pick(["fill","order"]);
+  if(k==="fill")return {k,ti,si,s,opts:shuffle([s.target,...s.opts])};
+  if(k==="speak")return {k,ti,si,s,tries:0};
+  const m=s.plain.match(/^(.*?)([.!?])$/);const body=m?m[1]:s.plain,punct=m?m[2]:"";
+  const words=body.split(" ");const tiles=words.map((t,i)=>({id:i,t}));
+  const low=words.map(x=>x.toLowerCase());const dis=s.opts.find(o=>!o.includes(" ")&&!low.includes(o.toLowerCase()));
+  if(dis)tiles.push({id:tiles.length,t:dis});
+  return {k,ti,si,s,words,punct,bank:shuffleNot(tiles),ans:[]}}
+function speakable(s){return !/\d/.test(s.plain)}
+
+/* ===== MOTEUR D'EXERCICES ===== */
+function startRun(cfg){RUN=Object.assign({i:0,combo:0,best:0,first:0,coins:0,answered:false,ok:false,picked:null,dark:false,gain:3},cfg);RUN.total=cfg.items.length;go({name:"run"});autoAudio()}
+function cur(){return RUN.items[RUN.i]}
+function autoAudio(){const it=RUN&&cur();if(!it)return;if(it.k==="listen")speak(it.w.en);if(it.k==="listenOrder")speak(it.s.plain)}
+function answerText(it){return it.w?it.w.en:it.s.plain}
+function answer(ok,picked){const it=cur();if(RUN.answered)return;RUN.answered=true;RUN.ok=ok;RUN.picked=picked;
+  RUN.lastGain=0;if(!it.retry){if(ok){RUN.first++;const g=earn(RUN.gain);RUN.coins+=g;RUN.lastGain=g}if(it.w)gradeWord(it.w,ok)}
+  if(ok){RUN.combo++;RUN.best=Math.max(RUN.best,RUN.combo)}else{RUN.combo=0;
+    if(RUN.mode!=="exam"&&!it.retry&&it.k!=="speak"){const c=it.w?wordItem(it.w,[it.k]):gramItem(it.ti,it.si,it.k);c.retry=true;RUN.items.push(c)}}
+  markAct();save();if(it.k!=="speak")speak(answerText(it));render()}
+function nextItem(){RUN.i++;RUN.answered=false;RUN.picked=null;if(RUN.i>=RUN.items.length){const r=RUN;RUN=null;r.onEnd(r);return}render();window.scrollTo(0,0);autoAudio()}
+function skipItem(){RUN.items.splice(RUN.i,1);RUN.total=Math.max(0,RUN.total-1);RUN.answered=false;if(RUN.i>=RUN.items.length){const r=RUN;RUN=null;r.onEnd(r);return}render();autoAudio()}
+
+/* ===== PARCOURS ===== */
+function startLearn(pi){const fresh=WORDS.filter(w=>w.pack===pi&&!isSeen(w.id)).slice(0,NEW_WORDS);
+  if(!fresh.length){startReview(pi);return}
+  go({name:"cards",pi,list:fresh.map(w=>w.id),i:0});speak(fresh[0].en)}
+function learnQuiz(list){const fresh=list.map(id=>WBY[id]);const due=dueWords().filter(w=>!list.includes(w.id)).slice(0,10);
+  const items=shuffle(fresh).map(w=>wordItem(w,["listen","fr2en","en2fr"])).concat(due.map(w=>wordItem(w,["listen","fr2en","en2fr","spell"])));
+  startRun({mode:"words",eyebrow:"Quiz · "+PACKS[fresh[0].pack].name+(due.length?" + révisions":""),items,onEnd:r=>wordResult(r,"Nouveaux mots appris")})}
+function reviewPool(pi){if(pi!=null)return shuffle(WORDS.filter(w=>w.pack===pi&&isSeen(w.id))).slice(0,10);
+  const d=dueWords().slice(0,15);if(d.length<6){const ids=new Set(d.map(w=>w.id));
+    const extra=shuffle(WORDS.filter(w=>isSeen(w.id)&&!ids.has(w.id))).sort((a,b)=>wbox(a.id)-wbox(b.id)).slice(0,6-d.length);d.push(...extra)}
+  return shuffle(d)}
+function startReview(pi){const pool=reviewPool(pi);
+  if(!pool.length){toast("Apprends d'abord quelques mots !");CTX=null;return}
+  startRun({mode:"words",eyebrow:pi==null?"Révisions":"Révision · "+PACKS[pi].name,items:pool.map(w=>wordItem(w,["listen","fr2en","en2fr","spell"])),onEnd:r=>wordResult(r,"Révision terminée")})}
+function wordResult(r,title){finishCtx();showResult({title,big:r.first+" / "+r.total,sub:"bonnes réponses du premier coup",coins:r.coins,lines:r.best>=3?["Meilleur combo : ×"+r.best]:[]})}
+function practiceItems(ti,withReview){const kinds=["fill","order","fill","listenOrder"];
+  const idx=shuffle(TH[ti].items.map((x,i)=>i));const items=idx.slice(0,4).map((si,k)=>gramItem(ti,si,kinds[k]));
+  if(withReview&&ti>0){for(let n=0;n<2;n++){const pt=Math.floor(Math.random()*ti);const it=gramItem(pt,Math.floor(Math.random()*TH[pt].items.length));it.review=true;items.push(it)}}
+  const sp=idx.slice(4).find(si=>speakable(TH[ti].items[si]));if(micOk()&&sp!=null)items.push(gramItem(ti,sp,"speak"));
+  return shuffle(items)}
+function startPractice(ti,withReview){const gold=ts(ti).medal>=3;
+  startRun({mode:"gram",dark:true,ti,gain:gold?1:3,eyebrow:TH[ti].sport+" · Entraînement",items:practiceItems(ti,withReview),onEnd:r=>{ts(ti).tries++;save();finishCtx();
+    showResult({title:"Entraînement terminé",big:r.first+" / "+r.total,sub:TH[ti].gram+" · "+TH[ti].title,coins:r.coins,lines:[ts(ti).medal<2?"Quand tu te sens prête, passe l'épreuve pour gagner ta médaille.":ts(ti).medal<3?"Tu peux repasser l'épreuve pour viser l'or.":"Épreuve en or : les pièces sont réduites ici, vise la suivante !"],extra:{label:"Passer l'épreuve",a:"exam",v:ti}})}})}
+function startExam(ti){const idx=shuffle(TH[ti].items.map((x,i)=>i)).slice(0,10);const kinds=shuffle(["fill","fill","fill","fill","fill","order","order","order","listenOrder","listenOrder"]);
+  startRun({mode:"exam",dark:true,ti,gain:5,eyebrow:"Épreuve "+(ti+1)+" · "+TH[ti].sport,items:idx.map((si,k)=>gramItem(ti,si,kinds[k])),onEnd:r=>{
+    const note=Math.round(r.first/r.total*20)/2;const m=note>=10?3:note>=8?2:note>=6?1:0;const t=ts(ti);const old=t.medal;
+    t.best=Math.max(t.best,note);t.tries++;let bonus=0;const B=[0,20,40,80];
+    if(m>old){for(let k=old+1;k<=m;k++)bonus+=B[k];t.medal=m;t.medalOn=today();addCoins(bonus)}refreshUnlocks();save();finishCtx();
+    const lines=[];if(m>old)lines.push("Nouvelle médaille : "+MEDAL_NAME[m]+" !");if(m>=1&&old<1)lines.push("Épisode "+(ti+1)+" débloqué.");
+    if(ti<TH.length-1&&m>=2&&old<2){const w=waitInfo(ti+1);lines.push(themeOpen(ti+1)?"Épreuve "+(ti+2)+" débloquée !":"Épreuve "+(ti+2)+" : "+(w?w.txt.toLowerCase():"bientôt")+". En attendant, vise l'or ou révise !")}
+    if(m<2)lines.push("Il faut 8/10 pour l'argent et ouvrir la suite. Les phrases changent à chaque essai.");
+    showResult({title:"Note du jury",big:fr1(note)+" / 10",sub:TH[ti].title,medal:m,coins:r.coins+bonus,lines,extra:m<3?{label:"Retenter",a:"exam",v:ti}:null})}})}
+
+/* ===== SÉANCE DU JOUR ===== */
+function ensureDaily(){const t=today();if(S.daily&&S.daily.date===t)return S.daily;
+  const steps=[];const due=dueWords().length,np=nextPack();
+  if(due>=DUE_MAX||np<0||fragileCount()>=FRAGILE_MAX)steps.push({type:"review",label:due?"Révisions : "+Math.min(15,Math.max(6,due))+" mots":"Révisions de mots",sub:due?"Les mots à revoir aujourd'hui":"Entretiens ta mémoire"});
+  else steps.push({type:"learn",pack:np,label:"Nouveaux mots : "+PACKS[np].name,sub:NEW_WORDS+" mots + quiz"+(due?" + "+Math.min(10,due)+" à revoir":"")});
+  const ti=currentTheme();steps.push({type:"practice",ti,label:TH[ti].sport+" : "+TH[ti].title,sub:TH[ti].gram+(ti>0?" + révision":"")});
+  const ei=EPISODES.findIndex((e,i)=>epOpen(i)&&!(S.eps[i]&&S.eps[i].done));
+  if(ei>=0)steps.push({type:"episode",ep:ei,label:"Épisode "+(ei+1)+" : "+EPISODES[ei].title,sub:"Écoute + 3 questions"});
+  else steps.push({type:"sprint",label:"Sprint 60 secondes",sub:"Bats ton record"});
+  S.daily={date:t,steps:steps.map(s=>Object.assign(s,{done:false})),complete:false};save();return S.daily}
+function startStep(k){const st=S.daily.steps[k];CTX={step:k,date:S.daily.date};
+  if(st.type==="review")startReview(null);else if(st.type==="learn")startLearn(st.pack);else if(st.type==="practice")startPractice(st.ti,true);
+  else if(st.type==="episode")openEpisode(st.ep);else startSprint()}
+function weekCount(){const ws0=weekStart(today());let n=0;for(let i=0;i<7;i++)if(S.done[addDays(ws0,i)])n++;return n}
+function finishCtx(){if(!CTX)return;CTX.finished=true;const d=S.daily;if(!d||d.date!==CTX.date||d.date!==today()){save();return}if(d.steps[CTX.step])d.steps[CTX.step].done=true;
+  if(!d.complete&&d.steps.every(s=>s.done)){d.complete=true;addCoins(20);bumpStreak();S.done[today()]=true;CTX.dayDone=true;
+    const wk=weekStart(today());if(weekCount()>=WEEK_GOAL&&S.weekClaimed!==wk){S.weekClaimed=wk;S.weeks=(S.weeks||0)+1;addCoins(100);CTX.weekDone=true}}save()}
+function bumpStreak(){const t=today();if(S.streakDay===t)return;S.streak=(S.streakDay===addDays(t,-1))?S.streak+1:1;S.streakDay=t}
+function streakShown(){return (S.streakDay===today()||S.streakDay===addDays(today(),-1))?S.streak:0}
+function nextExclusive(){const ex=SHOP.filter(x=>x.lock&&x.lock.weeks&&x.lock.weeks>(S.weeks||0)).sort((a,b)=>a.lock.weeks-b.lock.weeks)[0];return ex||null}
+
+/* ===== SPRINT ===== */
+function startSprint(){const seen=WORDS.filter(w=>isSeen(w.id));const pool=seen.length>=6?seen:WORDS.filter(w=>w.pack===0);
+  SPRINT={pool,end:Date.now()+60000,score:0,coins:0,flash:null,q:null};nextSprint();go({name:"sprint"});
+  SPRINT.iv=setInterval(()=>{if(!SPRINT)return;const left=Math.max(0,Math.ceil((SPRINT.end-Date.now())/1000));const el=document.getElementById("sprintT");if(el)el.textContent=left;if(left<=0)endSprint()},200)}
+function nextSprint(){const w=pick(SPRINT.pool);const src=SPRINT.pool.length>=3?SPRINT.pool:WORDS;const o=[w.en];for(const x of shuffle(src)){if(o.length>=3)break;if(!o.includes(x.en))o.push(x.en)}SPRINT.q={w,opts:shuffle(o)}}
+function endSprint(){if(!SPRINT)return;clearInterval(SPRINT.iv);const sc=SPRINT.score,coins=SPRINT.coins;const rec=sc>(S.sprintBest||0);if(rec)S.sprintBest=sc;SPRINT=null;markAct();save();finishCtx();
+  showResult({title:"Sprint terminé",big:sc+" bonne"+(sc>1?"s":"")+" réponse"+(sc>1?"s":""),sub:rec?"Nouveau record personnel !":"Record : "+S.sprintBest,medal:rec&&sc>0?3:null,coins,lines:[],extra:{label:"Rejouer",a:"sprint"}})}
+
+/* ===== ÉPISODES ===== */
+function nameOr(){return S.name||"Emma"}
+function epText(i){return EPISODES[i].text.replace(/\{N\}/g,nameOr())}
+function epPlain(i){return epText(i).replace(/\[([^|\]]+)\|[^\]]+\]/g,"$1")}
+function epHTML(i){return esc(epText(i)).replace(/\[([^|\]]+)\|([^\]]+)\]/g,(m,a,b)=>`<span class="gloss" role="button" tabindex="0" data-a="gloss" data-en="${a}" data-fr="${b}">${a}</span>`)}
+function openEpisode(i){EP={i,show:false,playing:false,slow:false,phase:"read",qi:0,score:0,ans:null,t0:0};go({name:"episode"})}
+function epAudioStop(){if(EP&&EP.playing&&EP.t0){addTime((Date.now()-Math.max(EP.t0,lastAct))/1000);lastAct=Date.now()}if(EP){EP.playing=false;EP.t0=0}}
+
+/* ===== RÉSULTATS / NAVIGATION ===== */
+function showResult(o){go(Object.assign({name:"result"},o))}
+function go(v){V=v;const t=document.getElementById("toast");if(t)t.remove();render();window.scrollTo(0,0)}
+function toast(msg){let t=document.getElementById("toast");if(t)t.remove();t=document.createElement("div");t.id="toast";t.className="toast";t.textContent=msg;document.body.appendChild(t);clearTimeout(toastT);toastT=setTimeout(()=>t.remove(),2600)}
+function tabs(){const on=V.name==="home"?"home":["words","pack"].includes(V.name)?"words":V.name==="stories"?"stories":V.name==="shop"?"shop":"";
+  const b=(id,icn,l)=>`<button data-a="go" data-v="${id}" class="${on===id?"on":""}" ${on===id?'aria-current="page"':""}>${ic(icn,24)}${l}</button>`;
+  return `<nav class="tabs">${b("home","home","Accueil")}${b("words","cards","Mots")}${b("stories","story","Histoire")}${b("shop","bag","Boutique")}</nav>`}
+function topBar(back,title,eyebrow,right=""){return `<div class="row"><button class="iconbtn" data-a="go" data-v="${back}" aria-label="Retour">${ic("back")}</button><div class="grow">${eyebrow?`<div class="eyebrow">${eyebrow}</div>`:""}<div class="h2">${title}</div></div>${right}</div>`}
+function coinPill(){return `<div class="pill coin">${COIN}${S.coins||0}</div>`}
+
+/* ===== VUES ===== */
+const VIEWS={};
+VIEWS.boot=()=>`<div class="screen" style="justify-content:center;align-items:center"><div class="muted">Chargement…</div></div>`;
+VIEWS.onboard=()=>`<div class="screen" style="justify-content:center;gap:20px">
+  <div style="display:flex;justify-content:center">${avatar(170)}</div>
+  <div style="text-align:center"><div class="eyebrow">Saison 1 · Stage à Londres</div><h1 class="h1" style="font-size:34px;margin-top:6px">English Champion</h1><p class="muted" style="font-size:17px;margin:8px 0 0">Tu pars en stage de gym à Londres, puis à New York. Chaque jour, tu gagnes des mots, des médailles et des pièces.</p></div>
+  <label class="small muted" for="nm" style="font-weight:600">Comment tu t'appelles ?</label>
+  <input id="nm" class="field" maxlength="20" autocomplete="off" placeholder="Ton prénom">
+  <button class="btn violet" data-a="setName">C'est parti</button>
+  <div style="display:flex;flex-direction:column;gap:4px;align-items:center">
+  ${cloudOn()?`<button class="small" style="font-weight:600;color:var(--vink);padding:8px" data-a="go" data-v="restore">J'ai déjà un code de sauvegarde</button>`:""}
+  <button class="small" style="font-weight:600;color:var(--vink);padding:8px" data-a="import">Restaurer un fichier de sauvegarde</button></div></div>`;
+VIEWS.restore=()=>`<div class="screen">${topBar("onboard","Récupérer ma progression","Code de sauvegarde")}
+  <div class="card"><div class="muted">Le code est affiché dans l'espace parent de l'ancien téléphone (ex. K7PM-3XQ9-WD2F).</div>
+  <input id="rc" class="field" autocomplete="off" autocapitalize="characters" placeholder="XXXX-XXXX-XXXX" style="text-transform:uppercase;letter-spacing:.08em">
+  <button class="btn violet" data-a="restoreGo" ${V.busy?"disabled":""}>${V.busy?"Recherche…":"Récupérer"}</button></div></div>`;
+
+VIEWS.home=()=>{refreshUnlocks();const d=ensureDaily();const now=new Date().toLocaleDateString("fr-FR",{weekday:"long",day:"numeric",month:"long"});
+  const ti=currentTheme();const se=seasonOf(ti);const passed=medalsTotal();const k=d.steps.findIndex(s=>!s.done);const wc=weekCount();const nx=nextExclusive();
+  const steps=d.steps.map((s,i)=>{const st=s.done?"done":i===k?"cur":"todo";return `<div class="step"><div class="dot ${st}">${s.done?ic("check",16,3):i+1}</div><div class="grow"><div style="font-weight:600;font-size:15px;${st==="todo"?"color:var(--muted)":""}">${esc(s.label)}</div><div class="small muted">${s.done?"Terminé":esc(s.sub)}</div></div></div>`}).join("");
+  const note=S.unlockNote!=null?`<div class="card pop" style="background:var(--ink);color:#fff;border:0;flex-direction:row;align-items:center"><div style="color:#FFD27A">${ic("trophy",30)}</div><div class="grow"><div style="font-weight:700">${S.unlockNote===8?"Saison 2 : New York !":"Nouvelle épreuve débloquée"}</div><div class="small" style="color:#E4DEFF">Épreuve ${S.unlockNote+1} : ${esc(TH[S.unlockNote].title)}</div></div><button class="btn coral" style="width:auto" data-a="seeUnlock">Voir</button></div>`:"";
+  return `<div class="screen withnav">
+  <div class="between"><div><div class="small muted" style="font-weight:500">${cap(now)}</div><h1 class="h1">Salut, ${esc(nameOr())} !</h1></div><div class="row" style="gap:6px"><div class="pill flame">${FLAME}${streakShown()}</div>${coinPill()}</div></div>
+  ${note}
+  <button class="card" data-a="go" data-v="season" style="background:${se===1?"var(--violet)":"#0E6E69"};color:#fff;border:0;text-align:left">
+    <div class="between"><div class="small" style="font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:#E4DEFF">${se===1?"Saison 1 · Stage à Londres":"Saison 2 · New York"}</div><div class="small" style="font-weight:700">${passed} / ${TH.length} médailles</div></div>
+    <div style="font-size:21px;font-weight:700;line-height:1.2">Épreuve ${ti+1} : ${esc(TH[ti].title)}</div>
+    <div class="bar" style="background:rgba(255,255,255,.25)"><i style="width:${Math.round(passed/TH.length*100)}%;background:#fff"></i></div>
+    <div class="small" style="color:#E4DEFF">${esc(TH[ti].gram)} · voir toutes les épreuves</div></button>
+  <div class="card"><div class="between"><div class="h2">Séance du jour</div><div class="small muted">~10 min · 3 étapes</div></div>${steps}
+    ${k>=0?`<button class="btn dark" data-a="step" data-v="${k}">${k===0?"Commencer":"Continuer"}</button>`:`<div class="feedback ok" style="animation:none"><div class="t">Séance terminée, bravo !</div><div>Reviens demain pour garder ta série. En attendant, tente un sprint.</div></div>`}</div>
+  <div class="card" style="gap:10px"><div class="between"><div class="row" style="gap:8px;color:var(--gold)">${ic("trophy",22)}<span class="h2" style="color:var(--ink)">Défi de la semaine</span></div><b>${Math.min(wc,WEEK_GOAL)} / ${WEEK_GOAL}</b></div>
+    <div class="bar"><i style="width:${Math.round(Math.min(wc,WEEK_GOAL)/WEEK_GOAL*100)}%;background:var(--gold)"></i></div>
+    <div class="small muted">${S.weekClaimed===weekStart(today())?"Défi réussi cette semaine ! ":""}${WEEK_GOAL} séances complètes dans la semaine = 100 pièces.${nx?" Article exclusif « "+esc(nx.name)+" » à "+nx.lock.weeks+" défi"+(nx.lock.weeks>1?"s":"")+" ("+(S.weeks||0)+" réussi"+((S.weeks||0)>1?"s":"")+").":""}</div></div>
+  <div class="grid2">
+    <button class="card" data-a="sprint" style="text-align:left;gap:6px"><div class="row" style="color:var(--coral)">${ic("bolt",22)}<span class="h2" style="color:var(--ink)">Sprint</span></div><div class="small muted">60 secondes chrono</div><div style="font-weight:700">Record : ${S.sprintBest||0}</div></button>
+    <button class="card" data-a="go" data-v="season" style="text-align:left;gap:8px"><div class="h2">Médailles</div><div class="row" style="gap:6px">${[3,2,1].map(m=>`<div style="display:flex;flex-direction:column;align-items:center;gap:2px"><div class="medal m${m}" style="width:30px;height:30px"></div><b style="font-size:14px">${medalCount(m)}</b></div>`).join("")}</div></button>
+  </div>
+  ${needExport()?`<div class="card" style="flex-direction:row;align-items:center;background:#FFF4D6;border-color:#F3DFA6"><div class="grow"><div style="font-weight:700">Sauvegarde ta progression</div><div class="small" style="color:#6B4A00">Un fichier de secours, une fois par semaine.</div></div><button class="btn dark" style="width:auto" data-a="export">Sauver</button></div>`:""}
+  <button data-a="gate" class="small muted" style="align-self:center;padding:10px;font-weight:600;text-decoration:underline">Espace parent</button>
+  </div>${tabs()}`};
+
+VIEWS.season=()=>{const row=(t,i)=>{const o=themeOpen(i),x=ts(i),w=waitInfo(i);return `<button class="item ${o?"":"locked"}" ${o?`data-a="go" data-v="theme" data-ti="${i}"`:"disabled"}>
+    <div class="medal m${x.medal}"></div><div class="grow"><div class="small muted" style="font-weight:600">Épreuve ${i+1} · ${esc(t.sport)}</div><div style="font-weight:700;font-size:16px">${esc(t.title)}</div><div class="small muted">${o?esc(t.gram)+(x.best?" · meilleure note "+fr1(x.best)+"/10":""):esc(w?w.txt:"")}</div></div>${o?ic("chev",20):ic("lock",20)}</button>`};
+  return `<div class="screen withnav">${topBar("home","Mes épreuves","Saison 1 et saison 2")}
+  <p class="muted" style="margin:0">Bronze (6/10) : l'épisode se débloque. Argent (8/10) : l'épreuve suivante s'ouvre au bout de ${MIN_DAYS} jours. Or : 10/10. Chaque essai tire 10 phrases parmi 24.</p>
+  <div class="eyebrow">Saison 1 · Londres</div><div class="list">${TH.slice(0,8).map((t,i)=>row(t,i)).join("")}</div>
+  <div class="eyebrow">Saison 2 · New York</div><div class="list">${TH.slice(8).map((t,i)=>row(t,i+8)).join("")}</div></div>${tabs()}`};
+
+VIEWS.theme=()=>{const ti=V.ti,t=TH[ti],x=ts(ti);return `<div class="screen withnav">${topBar("season",esc(t.title),"Épreuve "+(ti+1)+" · "+esc(t.sport))}
+  <div class="card" style="flex-direction:row;align-items:center"><div class="medal m${x.medal}" style="width:56px;height:56px"></div><div><div style="font-weight:700;font-size:17px">${MEDAL_NAME[x.medal]}</div><div class="small muted">${x.best?"Meilleure note : "+fr1(x.best)+" / 10":"Pas encore passée"}</div></div></div>
+  <div class="card" style="background:var(--ink);color:#fff;border:0"><div class="row" style="color:#FFD27A">${ic("bulb")}<b style="color:#fff">Astuce · ${esc(t.gram)}</b></div><div style="font-size:16px;line-height:1.45;color:#E4DEFF">${esc(t.rule)}</div>
+  <div style="font-size:15px;color:#fff;border-top:1px solid rgba(255,255,255,.15);padding-top:10px">Exemples : <b>${esc(t.items[0].plain)}</b> · <b>${esc(t.items[1].plain)}</b></div></div>
+  <button class="btn light" data-a="practice" data-v="${ti}">S'entraîner</button>
+  <button class="btn violet" data-a="exam" data-v="${ti}">Passer l'épreuve · 10 phrases</button></div>${tabs()}`};
+
+VIEWS.words=()=>{const due=dueWords().length;const learnt=WORDS.filter(w=>isLearnt(w.id)).length;const po=packsOpen();return `<div class="screen withnav">
+  <div class="between"><div><div class="eyebrow">Vocabulaire</div><h1 class="h1">Mes mots</h1></div><div class="pill coin" style="background:var(--lilac);color:var(--vink)">${learnt} / ${WORDS.length}</div></div>
+  <div class="card" style="flex-direction:row;align-items:center"><div class="grow"><div class="h2">Révisions du jour</div><div class="small muted">${due?due+" mot"+(due>1?"s":"")+" à revoir":"Rien à revoir aujourd'hui"}</div></div><button class="btn dark" style="width:auto" data-a="review" ${WORDS.some(w=>isSeen(w.id))?"":"disabled"}>Réviser</button></div>
+  <div class="small muted">Un mot est « appris » quand tu l'as réussi deux jours différents. De nouveaux paquets s'ouvrent quand tu avances dans les épreuves.</div>
+  <div class="list">${PACKS.map((p,i)=>{const st=packStats(i),o=i<po;return `<button class="item ${o?"":"locked"}" ${o?`data-a="go" data-v="pack" data-pi="${i}"`:"disabled"}><div class="badge" style="background:${o?p.tint:"#E4E2EE"};color:${o?p.ink:"#6E6A86"}">${o?ic(p.icon,24):ic("lock",20)}</div><div class="grow"><div style="font-weight:700;font-size:16px">${esc(p.name)}</div><div class="small muted">${o?st.learnt+" appris · "+st.seen+" vus sur "+st.total:"Avance dans les épreuves pour l'ouvrir"}</div>${o?`<div class="bar" style="height:6px;margin-top:6px"><i style="width:${Math.round(st.learnt/st.total*100)}%"></i></div>`:""}</div>${o?ic("chev",20):""}</button>`}).join("")}</div></div>${tabs()}`};
+
+VIEWS.pack=()=>{const pi=V.pi,p=PACKS[pi],st=packStats(pi);const list=WORDS.filter(w=>w.pack===pi);return `<div class="screen withnav">${topBar("words",esc(p.name),"Pack de mots")}
+  <div class="grid2"><button class="btn violet" data-a="learn" data-v="${pi}" ${st.seen<st.total?"":"disabled"}>Apprendre</button><button class="btn light" data-a="reviewPack" data-v="${pi}" ${st.seen?"":"disabled"}>Réviser</button></div>
+  <div class="list">${list.map(w=>{const sn=isSeen(w.id),lt=isLearnt(w.id),ms=isMastered(w.id);return `<div class="item"><button class="sound sm" data-a="say" data-t="${esc(w.en)}" aria-label="Écouter">${ic("sound",20)}</button><div class="grow"><div style="font-weight:700;font-size:17px">${sn?esc(w.en):"? ? ?"}</div><div class="small muted">${esc(w.fr)}</div></div><div class="small" style="font-weight:700;color:${ms?"#B8871A":lt?"var(--ok)":sn?"var(--vink)":"#6E6A86"}">${ms?"Maîtrisé":lt?"Appris":sn?"En cours":"Nouveau"}</div></div>`}).join("")}</div></div>${tabs()}`};
+
+VIEWS.cards=()=>{const w=WBY[V.list[V.i]];const p=PACKS[w.pack];
+  const seg=V.list.map((id,k)=>`<div style="height:6px;border-radius:9px;background:${k<=V.i?"var(--violet)":"#DCD7F0"}"></div>`).join("");
+  return `<div class="screen"><div class="row"><button class="iconbtn" data-a="quit" aria-label="Quitter">${ic("close",20)}</button><div class="grow"><div class="eyebrow">Pack ${esc(p.name)} · nouveau mot</div><div style="display:grid;grid-template-columns:repeat(${V.list.length},minmax(0,1fr));gap:4px;margin-top:6px">${seg}</div></div><div style="font-weight:700">${V.i+1}/${V.list.length}</div></div>
+  <div class="card" style="flex:1">
+    <div class="hero" style="background:${p.tint};color:${p.ink}">${ic(p.icon,84,1.6)}</div>
+    <div class="between"><div><div class="bigword pop">${esc(w.en)}</div><div style="font-size:18px;color:var(--muted);margin-top:6px">${esc(w.fr)}</div></div>
+      <div class="row" style="gap:8px"><button class="sound" data-a="say" data-t="${esc(w.en)}" aria-label="Écouter">${ic("sound",26)}</button><button class="iconbtn" style="width:56px;height:56px;border-radius:18px;font-weight:700;font-size:13px" data-a="saySlow" data-t="${esc(w.en)}" aria-label="Écouter lentement">0,6x</button></div></div>
+    <button data-a="say" data-t="${esc(w.exEn)}" style="background:var(--bg);border-radius:18px;padding:14px 16px;display:flex;flex-direction:column;gap:4px;text-align:left"><span class="eyebrow" style="font-size:12px">Dans une phrase · touche pour écouter</span><span style="font-size:18px;font-weight:600;line-height:1.35">${esc(w.exEn)}</span><span style="font-size:15px;color:var(--muted)">${esc(w.exFr)}</span></button>
+  </div>
+  <div class="grid2"><button class="btn light" data-a="cardKnown">Je le connais</button><button class="btn dark" data-a="cardNext">${V.i<V.list.length-1?"Mot suivant":"Au quiz !"}</button></div></div>`};
+
+function corrOf(it){return it.k==="en2fr"?it.w.fr:it.k==="fill"?it.s.target:it.w.en}
+function optBtns(it,list){const corr=corrOf(it);return `<div class="list">${list.map((o,k)=>{let c="";
+  if(RUN.answered){if(o===corr)c="ok";else if(k===RUN.picked)c="ko"}return `<button class="opt ${c}" data-a="pick" data-v="${k}" ${RUN.answered?"disabled":""}>${esc(o)}</button>`}).join("")}</div>`}
+function tileArea(it,light){const inAns=it.ans.map(id=>it.bank.find(t=>t.id===id));const isL=it.k==="spell";
+  return `<div class="answer ${light?"light":""}" ${isL?'style="min-height:80px;justify-content:center"':""}>${inAns.map(t=>`<button class="tile in ${isL?"letter":""}" data-a="untile" data-id="${t.id}" ${RUN.answered?"disabled":""}>${esc(t.t)}</button>`).join("")}${it.k!=="spell"&&inAns.length?`<span style="font-size:22px;font-weight:700;align-self:center">${it.punct}</span>`:""}</div>
+  <div class="tiles">${it.bank.map(t=>`<button class="tile ${isL?"letter":""} ${it.ans.includes(t.id)?"used":""}" data-a="tile" data-id="${t.id}" ${RUN.answered?"disabled":""}>${esc(t.t)}</button>`).join("")}</div>`}
+const PRAISE=["Bravo !","Parfait !","Excellent !","Super !","Yes, well done!","Trop fort !","Great job!"];
+VIEWS.run=()=>{const it=cur();const dk=RUN.dark;let body="";const rv=it.review?`<span class="pill" style="background:rgba(255,255,255,.12);color:#FFD27A;padding:4px 10px;font-size:12px">Révision · épreuve ${it.ti+1}</span>`:"";
+  if(it.k==="listen")body=`<div class="prompt">Écoute et choisis le bon mot</div><div class="row" style="justify-content:center;padding:8px 0"><button class="sound" style="width:84px;height:84px;border-radius:26px" data-a="say" data-t="${esc(it.w.en)}" aria-label="Réécouter">${ic("sound",38)}</button><button class="iconbtn" style="width:56px;height:56px;border-radius:18px;font-weight:700;font-size:13px" data-a="saySlow" data-t="${esc(it.w.en)}" aria-label="Lentement">0,6x</button></div>${optBtns(it,it.opts)}`;
+  else if(it.k==="fr2en")body=`<div class="eyebrow">Comment dit-on en anglais ?</div><div class="prompt" style="font-size:28px">${esc(it.w.fr)}</div>${optBtns(it,it.opts)}`;
+  else if(it.k==="en2fr")body=`<div class="eyebrow">Que veut dire ce mot ?</div><div class="row"><div class="prompt grow" style="font-size:32px">${esc(it.w.en)}</div><button class="sound sm" data-a="say" data-t="${esc(it.w.en)}" aria-label="Écouter">${ic("sound",20)}</button></div>${optBtns(it,it.opts)}`;
+  else if(it.k==="spell")body=`<div class="eyebrow">Écris le mot en anglais</div><div class="row"><div class="prompt grow" style="font-size:28px">${esc(it.w.fr)}</div><button class="sound sm" data-a="say" data-t="${esc(it.w.en)}" aria-label="Écouter">${ic("sound",20)}</button></div>${tileArea(it,true)}${RUN.answered?"":`<div class="grid2"><button class="btn light" data-a="clearTiles">Effacer</button><button class="btn dark" data-a="check" ${it.ans.length?"":"disabled"}>Vérifier</button></div>`}`;
+  else if(it.k==="fill"){const filled=RUN.answered?`<span class="blank" style="color:${RUN.ok?"#2FAE73":"var(--coral)"}">${esc(it.opts[RUN.picked])}</span>`:`<span class="blank">&nbsp;?&nbsp;</span>`;
+    body=`<div class="row" style="justify-content:space-between"><div class="eyebrow">Choisis le bon mot</div>${rv}</div><div style="font-size:16px;color:#B9B1E8">${esc(it.s.fr)}</div><div class="sentence" style="background:rgba(255,255,255,.06);border-radius:20px;padding:18px">${esc(it.s.before)}${filled}${esc(it.s.after)}</div>${optBtns(it,it.opts)}`}
+  else if(it.k==="order")body=`<div class="row" style="justify-content:space-between"><div class="eyebrow">Chorégraphie · remets les mots dans l'ordre</div>${rv}</div><div class="row" style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:20px;padding:14px"><button class="sound sm" data-a="say" data-t="${esc(it.s.plain)}" aria-label="Écouter la phrase">${ic("sound",20)}</button><div style="font-size:19px;font-weight:600;line-height:1.3">${esc(it.s.fr)}</div></div>${tileArea(it,false)}${RUN.answered?"":`<div class="grid2"><button class="btn light" data-a="clearTiles">Effacer</button><button class="btn coral" data-a="check" ${it.ans.length?"":"disabled"}>Vérifier</button></div>`}`;
+  else if(it.k==="listenOrder")body=`<div class="row" style="justify-content:space-between"><div class="eyebrow">Écoute · remets les mots dans l'ordre</div>${rv}</div><div class="row" style="justify-content:center;gap:10px"><button class="sound" style="width:72px;height:72px;border-radius:24px" data-a="say" data-t="${esc(it.s.plain)}" aria-label="Réécouter">${ic("sound",32)}</button><button class="iconbtn" style="width:56px;height:56px;border-radius:18px;font-weight:700;font-size:13px" data-a="saySlow" data-t="${esc(it.s.plain)}" aria-label="Lentement">0,6x</button></div><div class="small" style="text-align:center;color:#B9B1E8">Pas de texte : fie-toi à ton oreille.</div>${tileArea(it,false)}${RUN.answered?"":`<div class="grid2"><button class="btn light" data-a="clearTiles">Effacer</button><button class="btn coral" data-a="check" ${it.ans.length?"":"disabled"}>Vérifier</button></div>`}`;
+  else if(it.k==="speak")body=`<div class="row" style="justify-content:space-between"><div class="eyebrow">Répète après moi</div>${rv}</div><div class="card" style="background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.12);color:#fff"><div class="row"><button class="sound sm" data-a="say" data-t="${esc(it.s.plain)}" aria-label="Écouter le modèle">${ic("sound",20)}</button><div class="sentence" style="font-size:20px">${esc(it.s.plain)}</div></div><div style="font-size:15px;color:#B9B1E8">${esc(it.s.fr)}</div></div>
+    ${RUN.answered?"":`<div style="display:flex;flex-direction:column;align-items:center;gap:10px;padding:6px 0"><button class="sound" style="width:96px;height:96px;border-radius:99px;background:${it.listening?"var(--coral)":"var(--violet)"}" data-a="micStart" aria-label="Parler" ${it.listening?"disabled":""}>${ic("mic",40)}</button><div style="color:#E4DEFF;font-weight:600">${it.listening?"Je t'écoute…":"Touche le micro et lis la phrase à voix haute"}</div>
+    ${it.heard?`<div class="small" style="color:#FFB4A3;text-align:center">J'ai entendu : « ${esc(it.heard)} ». Réessaie (${it.tries}/3).</div>`:""}${it.err?`<div class="small" style="color:#FFB4A3;text-align:center">${esc(it.err)}</div>`:""}
+    <button class="small" style="color:#B9B1E8;padding:8px;text-decoration:underline" data-a="skipSpeak">Passer (pas de micro maintenant)</button></div>`}`;
+  let fb="";if(RUN.answered){const corr=answerText(it);
+    const extra=it.w?`<div><b>${esc(it.w.en)}</b> · ${esc(it.w.fr)}<br><span style="opacity:.85">${esc(it.w.exEn)}</span></div>`:it.k==="speak"?(it.heard?`<div>J'ai entendu : « ${esc(it.heard)} »</div>`:""):`${it.k==="listenOrder"?`<div>${esc(it.s.fr)}</div>`:""}${!RUN.ok?`<div>${ic("bulb",16)} ${esc(TH[it.ti].rule)}</div>`:""}`;
+    fb=`<div class="feedback ${RUN.ok?"ok":"ko"}"><div class="between"><div class="t">${RUN.ok?(it.k==="speak"?"Bien prononcé !":pick(PRAISE)):"Pas tout à fait"}</div>${RUN.ok&&RUN.lastGain?`<div class="pill coin pop">${COIN}+${RUN.lastGain}</div>`:""}</div>${RUN.ok&&it.k!=="listenOrder"?"":`<div>${RUN.ok?"":"Bonne réponse : "}<b>${esc(corr)}</b></div>`}${extra}${!RUN.ok&&RUN.mode!=="exam"&&!it.retry&&it.k!=="speak"?`<div class="small">Cette question reviendra à la fin.</div>`:""}<button class="btn dark" data-a="next">Continuer</button></div>`}
+  return `<div class="screen ${dk?"dark":""}"><div class="row"><button class="iconbtn" data-a="quit" aria-label="Quitter">${ic("close",20)}</button><div class="bar grow"><i style="width:${Math.round(RUN.i/RUN.items.length*100)}%"></i></div>${RUN.combo>=2?`<div class="pill pop" style="background:var(--coral);color:var(--ink)">Combo ×${RUN.combo}</div>`:""}</div>
+  <div class="eyebrow">${esc(RUN.eyebrow)}</div>${body}${fb}</div>`};
+
+VIEWS.result=()=>{const v=V;const cont=CTX&&CTX.finished&&!CTX.dayDone&&S.daily&&S.daily.steps.some(s=>!s.done);
+  return `<div class="screen" style="justify-content:center;text-align:center;align-items:center;gap:14px">
+  ${v.medal!=null?`<div class="medal m${v.medal} pop" style="width:110px;height:110px;border-width:10px"></div>`:`<div class="pop" style="color:var(--violet)">${ic("star",90,1.6)}</div>`}
+  ${CTX&&CTX.dayDone?`<div class="pill flame">${FLAME}Séance du jour terminée · +20</div>`:""}
+  ${CTX&&CTX.weekDone?`<div class="pill coin">${ic("trophy",18)}Défi de la semaine réussi · +100</div>`:""}
+  <div class="eyebrow">${esc(v.sub||"")}</div><h1 class="h1">${esc(v.title)}</h1><div style="font-size:40px;font-weight:800;letter-spacing:-.03em">${esc(v.big)}</div>
+  ${v.coins?`<div class="pill coin pop">${COIN}+${v.coins} pièces</div>`:""}
+  ${(v.lines||[]).map(l=>`<div style="font-size:16px;color:var(--muted)">${esc(l)}</div>`).join("")}
+  <div style="width:100%;display:flex;flex-direction:column;gap:10px;margin-top:10px">
+  ${cont?`<button class="btn violet" data-a="nextStep">Étape suivante</button>`:""}
+  ${v.extra&&!cont?`<button class="btn violet" data-a="${v.extra.a}" data-v="${v.extra.v!=null?v.extra.v:""}">${esc(v.extra.label)}</button>`:""}
+  <button class="btn ${cont||v.extra?"light":"dark"}" data-a="endFlow">Retour à l'accueil</button></div></div>`};
+
+VIEWS.sprint=()=>{const q=SPRINT.q;const left=Math.max(0,Math.ceil((SPRINT.end-Date.now())/1000));return `<div class="screen dark">
+  <div class="between"><button class="iconbtn" data-a="quitSprint" aria-label="Quitter">${ic("close",20)}</button><div class="eyebrow">Athlétisme · Sprint</div><div class="pill coin">${COIN}${SPRINT.score}</div></div>
+  <div style="text-align:center"><div class="timer" id="sprintT">${left}</div><div class="small" style="color:#B9B1E8">secondes</div></div>
+  ${SPRINT.flash?`<div class="feedback ${SPRINT.flash.ok?"ok":"ko"}" style="padding:10px 14px">${SPRINT.flash.ok?"Bien !":"Raté : "+esc(SPRINT.flash.fr)+" = <b>"+esc(SPRINT.flash.en)+"</b>"}</div>`:`<div style="height:44px"></div>`}
+  <div class="eyebrow">En anglais ?</div><div class="prompt" style="font-size:30px">${esc(q.w.fr)}</div>
+  <div class="list">${q.opts.map((o,k)=>`<button class="opt" data-a="sprintPick" data-v="${k}">${esc(o)}</button>`).join("")}</div></div>`};
+
+VIEWS.stories=()=>{const row=(e,i)=>{const o=epOpen(i),dn=S.eps[i]&&S.eps[i].done;return `<button class="item ${o?"":"locked"}" ${o?`data-a="episode" data-v="${i}"`:"disabled"}><div class="badge" style="background:${dn?"var(--okbg)":o?"var(--lilac)":"#E4E2EE"};color:${dn?"var(--ok)":o?"var(--vink)":"#6E6A86"}">${dn?ic("check",22,3):o?ic("story",22):ic("lock",20)}</div><div class="grow"><div class="small muted" style="font-weight:600">Épisode ${i+1}</div><div style="font-weight:700;font-size:16px">${esc(e.title)}</div><div class="small muted">${dn?"Écouté · "+S.eps[i].best+"/3":o?"Nouveau":"Bronze à l'épreuve "+(i+1)}</div></div>${o?ic("chev",20):""}</button>`};
+  return `<div class="screen withnav"><div><div class="eyebrow">Ton aventure</div><h1 class="h1">Histoire</h1></div>
+  <p class="muted" style="margin:0">Chaque épisode se débloque avec la médaille de bronze de l'épreuve du même numéro.</p>
+  <div class="eyebrow">Saison 1 · Londres</div><div class="list">${EPISODES.slice(0,8).map((e,i)=>row(e,i)).join("")}</div>
+  <div class="eyebrow">Saison 2 · New York</div><div class="list">${EPISODES.slice(8).map((e,i)=>row(e,i+8)).join("")}</div></div>${tabs()}`};
+
+VIEWS.episode=()=>{const e=EPISODES[EP.i];
+  const head=`<div class="row"><button class="iconbtn" data-a="quitEp" aria-label="Retour">${ic("back")}</button><div><div class="eyebrow">Épisode ${EP.i+1}</div><div class="h2" style="font-size:22px">${esc(e.title)}</div></div></div>`;
+  const chip=(on,a,l)=>`<button class="chip" style="${on?"background:var(--violet);color:#fff;border-color:var(--violet)":"background:transparent;color:#fff;border-color:rgba(255,255,255,.3)"}" data-a="${a}" aria-pressed="${on}">${l}</button>`;
+  if(EP.phase==="read")return `<div class="screen">${head}
+  <div class="card" style="background:var(--ink);color:#fff;border:0"><div class="row"><button class="sound" style="background:#fff;color:var(--ink);border-radius:99px" data-a="epPlay" aria-label="${EP.playing?"Pause":"Écouter"}">${ic(EP.playing?"pause":"play",22)}</button><div class="grow"><div style="font-weight:700">${EP.playing?"Lecture en cours…":"Écoute l'épisode"}</div><div class="small" style="color:#B9B1E8">D'abord sans le texte, puis avec.</div></div></div>
+  <div class="row">${chip(EP.slow,"epSlow","Plus lent")}${chip(EP.show,"epShow",EP.show?"Texte affiché":"Afficher le texte")}</div></div>
+  ${EP.show?`<div class="card storytext" style="display:block">${epHTML(EP.i)}</div><div class="small muted">Touche un mot surligné pour voir sa traduction.</div>`:`<div class="card" style="align-items:center;text-align:center;padding:28px 18px"><div style="color:var(--violet)">${ic("story",48,1.6)}</div><div class="muted">Écoute bien… Tu peux afficher le texte quand tu veux.</div></div>`}
+  <div class="grow"></div><button class="btn dark" data-a="epQuiz">Répondre aux questions</button></div>`;
+  const q=e.q[EP.qi];const stmt=q[0].replace(/\{N\}/g,nameOr());
+  const b=(val,l)=>{let c="";if(EP.ans!=null){if(val===q[1])c="ok";else if(EP.ans===val)c="ko"}return `<button class="opt ${c}" style="justify-content:center;text-align:center" data-a="epAns" data-v="${val?1:0}" ${EP.ans!=null?"disabled":""}>${l}</button>`};
+  return `<div class="screen">${head}<div class="between small muted" style="font-weight:600"><span>Vrai ou faux ?</span><span>Question ${EP.qi+1}/${e.q.length}</span></div>
+  <div class="card"><div class="row"><div class="prompt grow">${esc(stmt)}</div><button class="sound sm" data-a="say" data-t="${esc(stmt)}" aria-label="Écouter">${ic("sound",20)}</button></div></div>
+  <div class="grid2">${b(true,"Vrai")}${b(false,"Faux")}</div>
+  ${EP.ans!=null?`<div class="feedback ${EP.ans===q[1]?"ok":"ko"}"><div class="t">${EP.ans===q[1]?pick(PRAISE):"Pas tout à fait"}</div><div>C'est <b>${q[1]?"vrai":"faux"}</b>.</div><button class="btn dark" data-a="epNext">Continuer</button></div>`:`<button class="btn light" data-a="epBack">Relire le texte</button>`}</div>`};
+
+/* ===== AVATAR ET BOUTIQUE ===== */
+function shopItem(id){return SHOP.find(x=>x.id===id)}
+function avatar(size){const lt=(shopItem(S.equip.leotard)||{}).color||"#2B2D6E",sh=(shopItem(S.equip.shoes)||{}).color||"#fff",ac=S.equip.acc?shopItem(S.equip.acc):null;
+  let acc="",bun=`<circle cx="60" cy="13" r="9" fill="#1A1438"/>`;
+  if(ac){const c=ac.color;
+    if(ac.kind==="headband")acc=`<path d="M45 31 Q60 15 75 31" fill="none" stroke="${c}" stroke-width="6" stroke-linecap="round"/>`;
+    if(ac.kind==="bow")acc=`<path d="M60 12 L47 4 L47 20 Z M60 12 L73 4 L73 20 Z" fill="${c}"/><circle cx="60" cy="12" r="4" fill="${c}"/>`;
+    if(ac.kind==="cap"){bun="";acc=`<path d="M43 30 Q44 14 60 14 Q76 14 77 30 Z" fill="${c}" stroke="#fff" stroke-width="1.5"/><path d="M72 27 L93 29 Q93 34 74 33 Z" fill="${c}" stroke="#fff" stroke-width="1.5"/>`}
+    if(ac.kind==="medal")acc=`<path d="M52 57 L60 76 L68 57" fill="none" stroke="#5B3DF5" stroke-width="3"/><circle cx="60" cy="80" r="7" fill="${c}" stroke="#B8871A" stroke-width="2"/>`;
+    if(ac.kind==="glasses")acc=`<circle cx="53" cy="34" r="5.5" fill="${c}" stroke="#fff" stroke-width="2"/><circle cx="67" cy="34" r="5.5" fill="${c}" stroke="#fff" stroke-width="2"/><path d="M58.5 34h3" stroke="#fff" stroke-width="2"/>`;
+    if(ac.kind==="phones")acc=`<path d="M43 36 Q43 15 60 15 Q77 15 77 36" fill="none" stroke="${c}" stroke-width="4"/><rect x="38" y="29" width="9" height="14" rx="3" fill="${c}"/><rect x="73" y="29" width="9" height="14" rx="3" fill="${c}"/>`;
+    if(ac.kind==="crown"){bun="";acc=`<path d="M46 22 L49 7 L55 15 L60 4 L65 15 L71 7 L74 22 Z" fill="${c}" stroke="#B8871A" stroke-width="1.5"/>`}}
+  return `<svg width="${Math.round(size*.6)}" height="${size}" viewBox="0 0 120 200" role="img" aria-label="Ton avatar"><ellipse cx="60" cy="193" rx="42" ry="5" fill="rgba(26,20,56,.12)"/>${bun}<circle cx="60" cy="34" r="16" fill="#1A1438"/><rect x="56" y="46" width="8" height="12" fill="#1A1438"/>
+  <path d="M47 63 L22 24" stroke="#1A1438" stroke-width="9" stroke-linecap="round"/><path d="M73 63 L98 24" stroke="#1A1438" stroke-width="9" stroke-linecap="round"/>
+  <path d="M53 125 L50 181" stroke="#1A1438" stroke-width="10" stroke-linecap="round"/><path d="M67 125 L70 181" stroke="#1A1438" stroke-width="10" stroke-linecap="round"/>
+  <path d="M43 58 Q60 52 77 58 L75 112 L60 132 L45 112 Z" fill="${lt}" stroke="rgba(255,255,255,.5)" stroke-width="1"/><ellipse cx="47" cy="185" rx="11" ry="6" fill="${sh}" stroke="#1A1438" stroke-width="2"/><ellipse cx="73" cy="185" rx="11" ry="6" fill="${sh}" stroke="#1A1438" stroke-width="2"/>${acc}</svg>`}
+function avatarCard(size){const bg=(shopItem(S.equip.bg)||{}).color||"#ECE8FF";return `<div class="card" style="align-items:center;justify-content:center;background:${bg};border:0;padding:12px;position:relative;overflow:hidden"><div style="position:absolute;width:150px;height:150px;border-radius:99px;background:rgba(255,255,255,.75);top:50%;left:50%;transform:translate(-50%,-50%)"></div><div style="position:relative">${avatar(size)}</div></div>`}
+function lockOk(l){if(!l)return true;if(l.t!=null)return ts(l.t).medal>=l.m;if(l.gold)return medalCount(3)>=l.gold;if(l.medals)return medalsTotal()>=l.medals;if(l.season)return seasonReached(l.season);if(l.weeks)return (S.weeks||0)>=l.weeks;return true}
+function lab(x){return x.cat==="bg"?x.name+" background":x.name}
+function sayItem(x){return x.pl?`How much are the ${lab(x)}?`:`How much is the ${lab(x)}?`}
+function replyItem(x){const p=x.pl?"They're":"It's";if(!x.price)return x.lock&&x.lock.weeks?`${p} a special gift for champions!`:`${p} free!`;
+  const others=SHOP.filter(o=>o.cat===x.cat&&o.id!==x.id&&o.price>0&&o.price!==x.price);const o=others.length?pick(others):null;
+  let r=`${p} ${x.price} coins.`;if(o)r+=` ${p} ${x.price<o.price?"cheaper":"more expensive"} than the ${lab(o)}.`;return r}
+VIEWS.shop=()=>{const cats=[["leotard","Leotards"],["shoes","Trainers"],["acc","Accessories"],["bg","Décors"]];const cat=V.cat||"leotard";const sel=V.sel?shopItem(V.sel):null;
+  const items=SHOP.filter(x=>x.cat===cat);
+  let panel="";if(sel){const own=S.owned.includes(sel.id),open=lockOk(sel.lock),eq=S.equip[sel.cat]===sel.id;
+    panel=`<div class="card" style="background:var(--ink);color:#fff;border:0"><div class="row"><button class="sound sm" data-a="shopSay" aria-label="Écouter le dialogue">${ic("sound",20)}</button><div style="font-size:16px;line-height:1.4"><b>You:</b> ${esc(sayItem(sel))}<br><b style="color:#FFB4A3">Seller:</b> ${esc(V.reply||"")}</div></div>
+    ${!open?`<div class="btn light" style="cursor:default">${ic("lock",18)} ${esc(sel.lock.label)}</div>`:own?(eq&&sel.cat==="acc"?`<button class="btn light" data-a="shopOff">Enlever</button>`:eq?`<div class="btn light" style="cursor:default">${ic("check",18,3)} Tu le portes</div>`:`<button class="btn coral" data-a="shopWear">${sel.cat==="bg"?"Choisir ce décor":"Le porter"}</button>`):`<button class="btn coral" data-a="shopBuy" ${S.coins>=sel.price?"":"disabled"}>${sel.price?"I'll take it! · "+sel.price:"I'll take it! · cadeau"}</button>${S.coins<sel.price?`<div class="small" style="color:#E4DEFF;text-align:center">Il te manque ${sel.price-S.coins} pièces.</div>`:""}`}</div>`}
+  return `<div class="screen withnav"><div class="between"><div><div class="eyebrow">Sports shop</div><h1 class="h1">Boutique</h1></div>${coinPill()}</div>
+  ${avatarCard(150)}
+  <div class="chips">${cats.map(([k,l])=>`<button class="chip ${cat===k?"on":""}" data-a="shopCat" data-v="${k}" aria-pressed="${cat===k}">${l}</button>`).join("")}</div>
+  ${panel}
+  <div class="grid2">${items.map(x=>{const own=S.owned.includes(x.id),open=lockOk(x.lock),eq=S.equip[x.cat]===x.id;const shape=x.cat==="leotard"?"14px 14px 24px 24px":x.cat==="bg"?"12px":"99px";return `<button class="shopitem ${V.sel===x.id?"sel":""}" data-a="shopSel" data-v="${x.id}">
+    <div class="swatch" style="background:${open?"#F7F6FC":"#E4E2EE"}">${open?`<div style="width:${x.cat==="bg"?64:46}px;height:46px;border-radius:${shape};background:${x.color};border:2px solid #1A1438"></div>`:ic("lock",24)}</div>
+    <div style="font-weight:700;font-size:15px">${esc(cap(x.name))}</div>
+    <div class="small" style="font-weight:700;color:${eq?"var(--ok)":own?"var(--vink)":"#6B4A00"}">${eq?(x.cat==="bg"?"Choisi":"Porté"):own?"Acheté":!open?(x.lock.weeks?"Exclusif · défis":"Bloqué"):x.price?x.price+" pièces":"Cadeau"}</div></button>`}).join("")}</div>
+  ${sel?"":`<div class="small muted" style="text-align:center">Touche un article pour entendre le vendeur.</div>`}</div>${tabs()}`};
+
+/* ===== ESPACE PARENT (PIN) ===== */
+VIEWS.gate=()=>`<div class="screen">${topBar("home","Espace parent","Accès réservé")}
+  <div class="card">${S.pin?`<div class="h2">Code parent</div><input id="gateIn" class="field" type="password" inputmode="numeric" maxlength="6" autocomplete="off"><button class="btn dark" data-a="gateCheck">Entrer</button>`
+  :`<div class="h2">Choisis un code parent</div><div class="small muted">4 à 6 chiffres, à garder pour toi. Il protège le suivi, la sauvegarde et la réinitialisation.</div><input id="pin1" class="field" type="password" inputmode="numeric" maxlength="6" placeholder="Code" autocomplete="off"><input id="pin2" class="field" type="password" inputmode="numeric" maxlength="6" placeholder="Confirme le code" autocomplete="off"><button class="btn dark" data-a="pinSet">Enregistrer</button>`}</div></div>`;
+VIEWS.parent=()=>{const days=[];for(let i=13;i>=0;i--)days.push(addDays(today(),-i));const mins=days.map(d=>Math.round((S.time[d]||0)/60));const mx=Math.max(5,...mins);
+  const total=Math.round(Object.values(S.time).reduce((a,b)=>a+b,0)/60);const learnt=WORDS.filter(w=>isLearnt(w.id)).length,seen=WORDS.filter(w=>isSeen(w.id)).length,mast=WORDS.filter(w=>isMastered(w.id)).length;
+  const hard=WORDS.filter(w=>S.words[w.id]&&S.words[w.id].wrong>0&&S.words[w.id].box<3).sort((a,b)=>S.words[b.id].wrong-S.words[a.id].wrong).slice(0,6);
+  const w0=weekStart(today());const wk=[0,1,2,3,4,5,6].map(i=>addDays(w0,i));const wMin=Math.round(wk.reduce((a,d)=>a+(S.time[d]||0),0)/60);
+  const wSess=wk.filter(d=>S.done[d]).length;const wNew=WORDS.filter(w=>{const x=S.words[w.id];return x&&x.learntOn&&x.learntOn>=w0}).length;const wMed=TH.filter((t,i)=>ts(i).medalOn&&ts(i).medalOn>=w0).length;
+  return `<div class="screen">${topBar("home","Espace parent","Suivi de progression")}
+  <div class="card" style="background:var(--ink);color:#fff;border:0"><div class="h2">Cette semaine</div><div class="grid2" style="gap:12px">
+    <div><div style="font-size:24px;font-weight:800">${wMin} min</div><div class="small" style="color:#B9B1E8">d'entraînement actif</div></div>
+    <div><div style="font-size:24px;font-weight:800">${wSess} / 7</div><div class="small" style="color:#B9B1E8">séances complètes</div></div>
+    <div><div style="font-size:24px;font-weight:800">${wNew}</div><div class="small" style="color:#B9B1E8">mots appris</div></div>
+    <div><div style="font-size:24px;font-weight:800">${wMed}</div><div class="small" style="color:#B9B1E8">médailles gagnées</div></div></div>
+    <div class="small" style="color:#E4DEFF">Épreuve en cours : ${currentTheme()+1}. ${esc(TH[currentTheme()].gram)} · défis réussis : ${S.weeks||0}</div></div>
+  <div class="card"><div class="h2">Temps d'entraînement</div><div class="small muted">Minutes actives par jour sur 14 jours. Seules les interactions espacées de moins de 90 s et l'écoute des épisodes sont comptées.</div>
+  <div class="bars14">${mins.map((m,i)=>`<div class="${m?"":"zero"}" style="height:${Math.max(3,Math.round(m/mx*86))}px" title="${days[i]} : ${m} min"></div>`).join("")}</div>
+  <div class="between small muted"><span>${days[0].slice(8)}/${days[0].slice(5,7)}</span><span>Aujourd'hui</span></div>
+  <div class="grid3" style="text-align:center"><div><div style="font-size:22px;font-weight:800">${total}</div><div class="small muted">min au total</div></div><div><div style="font-size:22px;font-weight:800">${Object.keys(S.act).length}</div><div class="small muted">jours actifs</div></div><div><div style="font-size:22px;font-weight:800">${streakShown()}</div><div class="small muted">jours de série</div></div></div></div>
+  <div class="card"><div class="h2">Vocabulaire</div><div>${seen} mots vus sur ${WORDS.length}, ${learnt} appris (réussis deux jours différents), ${mast} maîtrisés (réussis 4 fois d'affilée, espacés). ${dueWords().length} à revoir aujourd'hui.</div>
+  ${hard.length?`<div class="small muted" style="font-weight:600">Mots qui résistent</div>${hard.map(w=>`<div class="between small"><span><b>${esc(w.en)}</b> · ${esc(w.fr)}</span><span class="muted">${S.words[w.id].wrong} erreur(s)</span></div>`).join("")}`:""}</div>
+  <div class="card"><div class="h2">Épreuves de grammaire</div>${TH.map((t,i)=>{const x=ts(i);return `<div class="between small"><span>${i+1}. ${esc(t.gram)}</span><span style="font-weight:700">${x.tries?fr1(x.best)+"/10 · "+MEDAL_NAME[x.medal]:themeOpen(i)?"ouverte":"—"}</span></div>`}).join("")}
+  <div class="small muted">Épisodes écoutés : ${Object.values(S.eps).filter(e=>e&&e.done).length} / ${EPISODES.length}. Rythme : une nouvelle épreuve au plus tôt tous les ${MIN_DAYS} jours.</div></div>
+  <div class="card"><div class="h2">Réglages</div><input id="pn" class="field" maxlength="20" value="${esc(S.name)}"><button class="btn light" data-a="rename">Enregistrer le prénom</button>
+  <button class="btn light" data-a="toggleMic">Exercice « Répète après moi » : ${S.settings.mic!==false?"activé":"désactivé"}</button>
+  <div class="small muted">L'oral utilise la reconnaissance vocale de Chrome : il faut une connexion internet et autoriser le micro. ${SR?"":"Ce navigateur ne la propose pas."}</div>
+  <button class="btn light" data-a="pinReset">Changer le code parent</button></div>
+  <div class="card"><div class="h2">Sauvegarde et historique</div>
+  ${cloudOn()?`<div>Code de sauvegarde : <b style="letter-spacing:.06em;font-size:18px">${esc(S.backupCode||"")}</b></div><div class="small muted">Garde ce code hors du téléphone (envoie-le-toi) : il suffit pour tout récupérer sur un nouveau téléphone. ${S.cloudAt?"Dernière sauvegarde en ligne : "+new Date(S.cloudAt).toLocaleString("fr-FR",{dateStyle:"short",timeStyle:"short"})+".":"Pas encore sauvegardé en ligne."} Une copie datée est gardée en ligne pour chaque jour d'utilisation.</div>
+  ${S.cloudAhead?`<div class="feedback ko" style="animation:none"><div>Une version plus avancée existe en ligne (autre téléphone ?). Elle n'a pas été écrasée.</div><button class="btn dark" data-a="cloudAheadGo">Récupérer la version en ligne</button></div>`:""}
+  <div class="grid2"><button class="btn light" data-a="shareCode">Envoyer le code</button><button class="btn light" data-a="pushNow">Sauvegarder</button></div>
+  <label class="small muted" for="cday" style="font-weight:600">Revenir à la version en ligne d'un jour précis</label><div class="row"><input id="cday" type="date" class="field" style="flex:1" max="${today()}"><button class="btn light" style="width:auto" data-a="cloudDay">Chercher</button></div>
+  ${V.cloudSel?`<div class="feedback ko" style="animation:none"><div>Remplacer la progression actuelle par celle du ${esc(V.cloudSel.d)} ? Une copie de la version actuelle est gardée sur le téléphone.</div><button class="btn dark" data-a="cloudYes">Confirmer</button></div>`:""}`
+  :`<div class="feedback ko" style="animation:none"><div><b>Sauvegarde en ligne non activée.</b> L'historique est gardé sur ce téléphone (30 jours de versions), mais il serait perdu avec le téléphone ou en effaçant les données de Chrome. Active CLOUD en haut du code (10 minutes, gratuit) ou exporte un fichier chaque semaine${S.lastExport?" (dernier export : "+new Date(S.lastExport).toLocaleDateString("fr-FR")+")":""}.</div></div>`}
+  <div class="small muted" style="font-weight:600">Versions gardées sur ce téléphone</div>
+  ${V.snaps?(V.snaps.length?V.snaps.slice(0,12).map(k=>`<button class="item" style="padding:10px 12px" data-a="snapAsk" data-v="${esc(k)}"><div class="grow small"><b>${esc(k)}</b></div><span class="small" style="color:var(--vink);font-weight:700">Restaurer</span></button>`).join(""):`<div class="small muted">Aucune version pour l'instant (une copie est faite chaque jour d'utilisation).</div>`):`<button class="btn light" data-a="loadSnaps">Afficher les versions</button>`}
+  ${V.snapSel?`<div class="feedback ko" style="animation:none"><div>Revenir à la version « ${esc(V.snapSel)} » ? La version actuelle est d'abord mise de côté.</div><button class="btn dark" data-a="snapYes">Confirmer</button></div>`:""}
+  <div class="grid2"><button class="btn light" data-a="export">Exporter</button><button class="btn light" data-a="import">Importer</button></div>
+  ${V.confirm?`<button class="btn" style="background:var(--ko);color:#fff" data-a="resetYes">Confirmer : tout effacer</button>`:`<button class="btn light" data-a="resetAsk">Réinitialiser la progression</button>`}</div></div>`};
+
+/* ===== RENDU ===== */
+function render(){const v=VIEWS[V.name]||VIEWS.home;document.getElementById("app").innerHTML=v();document.body.style.background=(V.name==="run"&&RUN&&RUN.dark)||V.name==="sprint"?"#1A1438":"#F7F6FC"}
+
+/* ===== ACTIONS ===== */
+const A={
+go:d=>{const v={name:d.v};if(d.ti!=null)v.ti=+d.ti;if(d.pi!=null)v.pi=+d.pi;stopSpeech();go(v)},
+setName:()=>{const n=document.getElementById("nm").value.trim();if(!n){toast("Écris ton prénom");return}S.name=n.slice(0,20);save();go({name:"home"})},
+say:d=>speak(d.t),saySlow:d=>speak(d.t,true),
+step:d=>startStep(+d.v),
+nextStep:()=>{const k=ensureDaily().steps.findIndex(s=>!s.done);if(k>=0)startStep(k);else{CTX=null;go({name:"home"})}},
+endFlow:()=>{CTX=null;go({name:"home"})},
+seeUnlock:()=>{const n=S.unlockNote;S.unlockNote=null;save();go({name:"theme",ti:n})},
+sprint:()=>{if(!CTX||CTX.finished)CTX=null;startSprint()},
+practice:d=>{CTX=null;startPractice(+d.v,false)},
+exam:d=>{CTX=null;startExam(+d.v)},
+learn:d=>{CTX=null;startLearn(+d.v)},
+review:()=>{CTX=null;startReview(null)},
+reviewPack:d=>{CTX=null;startReview(+d.v)},
+quit:()=>{stopSpeech();if(REC){try{REC.abort()}catch(e){}REC=null}RUN=null;CTX=null;go({name:"home"})},
+cardKnown:()=>{ws(V.list[V.i]).known=true;A.cardNext()},
+cardNext:()=>{if(V.i<V.list.length-1){V.i++;render();speak(WBY[V.list[V.i]].en)}else learnQuiz(V.list)},
+pick:d=>{const it=cur();const k=+d.v;answer(it.opts[k]===corrOf(it),k)},
+tile:d=>{const it=cur();const id=+d.id;if(!it.ans.includes(id)){it.ans.push(id);const t=it.bank.find(x=>x.id===id);if(it.k==="order")speak(t.t);render()}},
+untile:d=>{const it=cur();it.ans=it.ans.filter(x=>x!==+d.id);render()},
+clearTiles:()=>{cur().ans=[];render()},
+check:()=>{const it=cur();const got=it.ans.map(id=>it.bank.find(t=>t.id===id).t);
+  if(it.k==="spell")answer(got.join("")===it.w.en.toLowerCase(),null);else answer(got.join(" ")===it.words.join(" "),null)},
+next:()=>nextItem(),
+skipSpeak:()=>{if(REC){try{REC.abort()}catch(e){}REC=null}skipItem()},
+micStart:()=>{const it=cur();if(!SR){toast("Micro non disponible sur ce navigateur");return}stopSpeech();
+  /* iPhone : résultats intermédiaires activés et arrêt forcé au bout de 7 s, sinon Safari peut ne rien renvoyer */
+  const NOHEAR="Je n'ai rien entendu. Sur iPhone : active la Dictée (Réglages › Général › Clavier › Activer Dictée), autorise le micro pour Safari, puis réessaie.";
+  const r=new SR();REC=r;r.lang="en-GB";r.interimResults=true;r.continuous=false;r.maxAlternatives=3;it.listening=true;it.err=null;it.got=[];render();
+  const live=()=>RUN&&V.name==="run"&&RUN.items[RUN.i]===it&&!RUN.answered;
+  const finish=()=>{if(!live())return;it.listening=false;const alts=it.got.filter(Boolean);if(!alts.length){it.err=it.err||NOHEAR;render();return}
+    let best=-1,bestT=alts[0];for(const a of alts){const sc=matchScore(it.s.plain,a);if(sc>best){best=sc;bestT=a}}
+    it.heard=bestT;it.err=null;if(best>=0.7)answer(true,null);else{it.tries++;if(it.tries>=3)answer(false,null);else render()}};
+  r.onresult=e=>{let full="";const alts=[];for(let i=0;i<e.results.length;i++){const res=e.results[i];if(res[0])full+=res[0].transcript+" ";for(let k=0;k<res.length;k++)alts.push(res[k].transcript)}
+    it.got=[full.trim()].concat(alts);const last=e.results[e.results.length-1];if(last&&last.isFinal){try{r.stop()}catch(x){}}};
+  r.onerror=e=>{const er=e&&e.error;if(er==="not-allowed"||er==="service-not-allowed")it.err="Le micro est refusé. Sur iPhone : Réglages › Safari › Microphone › Autoriser, et active la Dictée (Réglages › Général › Clavier).";
+    else if(er==="network")it.err="Il faut une connexion internet pour l'oral.";else if(er==="audio-capture")it.err="Aucun micro détecté.";};
+  r.onend=()=>{REC=null;clearTimeout(it.tmo);if(!live()){it.listening=false;return}finish()};
+  it.tmo=setTimeout(()=>{try{r.stop()}catch(x){}},7000);
+  try{r.start()}catch(e){it.listening=false;it.err=NOHEAR;render()}},
+sprintPick:d=>{const q=SPRINT.q;const ok=q.opts[+d.v]===q.w.en;if(ok){SPRINT.score++;SPRINT.coins+=earn(1)}SPRINT.flash={ok,fr:q.w.fr,en:q.w.en};nextSprint();save();render()},
+quitSprint:()=>{if(SPRINT){clearInterval(SPRINT.iv);SPRINT=null}CTX=null;save();go({name:"home"})},
+episode:d=>{CTX=null;openEpisode(+d.v)},
+epPlay:()=>{if(EP.playing){epAudioStop();stopSpeech();render();return}EP.playing=true;EP.t0=Date.now();const parts=epPlain(EP.i).match(/[^.!?]+[.!?]+"?\s*/g)||[epPlain(EP.i)];
+  speakSeq(parts.map(p=>p.trim()),EP.slow,()=>{if(EP&&EP.playing){epAudioStop();save();if(V.name==="episode")render()}});render()},
+epSlow:()=>{EP.slow=!EP.slow;if(EP.playing){epAudioStop();stopSpeech()}render()},
+epShow:()=>{EP.show=!EP.show;render()},
+gloss:d=>{toast(d.en+" → "+d.fr);speak(d.en)},
+epQuiz:()=>{epAudioStop();stopSpeech();EP.phase="quiz";EP.ans=null;render()},
+epBack:()=>{EP.phase="read";EP.show=true;render()},
+epAns:d=>{const q=EPISODES[EP.i].q[EP.qi];EP.ans=d.v==="1";if(EP.ans===q[1])EP.score++;markAct();render()},
+epNext:()=>{EP.qi++;EP.ans=null;if(EP.qi<EPISODES[EP.i].q.length){render();return}
+  const i=EP.i,sc=EP.score,n=EPISODES[i].q.length;const first=!(S.eps[i]&&S.eps[i].done);const prev=S.eps[i]||{best:0};S.eps[i]={done:true,best:Math.max(prev.best||0,sc)};
+  let coins;if(first){coins=30+sc*5;addCoins(coins)}else coins=earn(sc);EP=null;save();finishCtx();
+  showResult({title:"Épisode terminé",big:sc+" / "+n,sub:EPISODES[i].title,coins,lines:sc<n?["Tu peux réécouter l'épisode depuis l'onglet Histoire."]:[]})},
+quitEp:()=>{epAudioStop();stopSpeech();EP=null;CTX=null;save();go({name:"stories"})},
+shopCat:d=>{V.cat=d.v;V.sel=null;render()},
+shopSel:d=>{const x=shopItem(d.v);V.sel=d.v;V.reply=replyItem(x);render();speakSeq([sayItem(x),V.reply])},
+shopSay:()=>{const x=shopItem(V.sel);speakSeq([sayItem(x),V.reply])},
+shopBuy:()=>{const x=shopItem(V.sel);if(!x||S.coins<x.price||!lockOk(x.lock)||S.owned.includes(x.id))return;addCoins(-x.price);S.owned.push(x.id);S.equip[x.cat]=x.id;save();speak("I'll take it!");toast(x.cat==="bg"?"Nouveau décor installé !":"Acheté ! Tu le portes maintenant.");render()},
+shopWear:()=>{const x=shopItem(V.sel);S.equip[x.cat]=x.id;save();render()},
+shopOff:()=>{S.equip.acc=null;save();render()},
+gate:()=>go({name:"gate"}),
+pinSet:()=>{const a=document.getElementById("pin1").value.trim(),b=document.getElementById("pin2").value.trim();if(!/^\d{4,6}$/.test(a)){toast("4 à 6 chiffres");return}if(a!==b){toast("Les deux codes sont différents");return}S.pin=a;save();toast("Code parent enregistré");go({name:"parent"})},
+gateCheck:()=>{const v=document.getElementById("gateIn").value.trim();if(v&&v===S.pin)go({name:"parent"});else toast("Code incorrect")},
+pinReset:()=>{S.pin=null;save();go({name:"gate"})},
+toggleMic:()=>{S.settings.mic=S.settings.mic===false;save();render()},
+rename:()=>{const n=document.getElementById("pn").value.trim();if(n){S.name=n.slice(0,20);save();toast("Prénom enregistré")}},
+shareCode:async()=>{const t="Code de sauvegarde English Champion : "+S.backupCode;try{if(navigator.share){await navigator.share({title:"English Champion",text:t});return}}catch(e){return}
+  try{await navigator.clipboard.writeText(t);toast("Code copié")}catch(e){toast(t)}},
+loadSnaps:async()=>{const ks=(await idbKeys()).filter(k=>String(k).startsWith("snap:")).sort().reverse();V.snaps=ks.map(k=>String(k).slice(5));render()},
+snapAsk:d=>{V.snapSel=d.v;render()},
+snapYes:async()=>{const raw=await idbGetKey("snap:"+V.snapSel);const st=parseState(raw);if(!st){toast("Version illisible");return}adopt(st,"restauration");V.snapSel=null;toast("Version du "+st.updatedAt.slice(0,10)+" restaurée");go({name:"home"})},
+cloudDay:async()=>{const d=document.getElementById("cday").value;if(!/^\d{4}-\d{2}-\d{2}$/.test(d)){toast("Choisis une date");return}toast("Recherche…");let st=null;try{st=await cloudGet(S.backupCode,d)}catch(e){}
+  if(!st){toast("Aucune sauvegarde en ligne ce jour-là");return}V.cloudSel={d,st};render()},
+cloudYes:()=>{const st=V.cloudSel.st;adopt(st,"restauration en ligne");V.cloudSel=null;toast("Version restaurée");go({name:"home"})},
+cloudAheadGo:async()=>{toast("Récupération…");let st=null;try{st=await cloudGet(S.backupCode)}catch(e){}if(!st){toast("Pas de connexion");return}const code=S.backupCode,pin=S.pin;safetySnap("synchro");S=st;S.backupCode=code;if(!S.pin)S.pin=pin;normalize();S.cloudAhead=false;writeLocal();toast("Progression mise à jour");render()},
+pushNow:async()=>{lastCheck=0;toast("Sauvegarde en cours…");const ok=await cloudPush();toast(ok?"Sauvegardé en ligne":S.cloudAhead?"Une version plus avancée existe en ligne : rien n'a été écrasé":"Échec : vérifie la connexion internet");if(V.name==="parent")render()},
+restoreGo:async()=>{const c=cleanCode(document.getElementById("rc").value);if(c.length!==12){toast("Le code fait 12 caractères");return}V.busy=true;render();
+  let st=null;try{st=await cloudGet(c)}catch(e){}V.busy=false;if(!st){toast("Code introuvable ou pas de connexion");render();return}
+  safetySnap("récupération");const pin=S.pin;S=st;S.backupCode=c.slice(0,4)+"-"+c.slice(4,8)+"-"+c.slice(8);if(!S.pin)S.pin=pin;normalize();writeLocal();toast("Progression récupérée");go({name:"home"})},
+export:()=>{S.lastExport=new Date().toISOString();save();const b=new Blob([JSON.stringify({app:"english-champion",exported:new Date().toISOString(),state:S},null,1)],{type:"application/json"});const a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="english-champion-"+today()+".json";document.body.appendChild(a);a.click();a.remove();if(V.name==="home")render()},
+import:()=>document.getElementById("importFile").click(),
+resetAsk:()=>{V.confirm=true;render()},
+resetYes:()=>{safetySnap("réinitialisation");const n=S.name,c=S.backupCode,p=S.pin;S=defaultState();S.resetAt=new Date().toISOString();S.name=n;S.backupCode=c;S.pin=p;normalize();save();try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){};if(cloudOn()){clearTimeout(pushT);cloudPush()}toast("Progression réinitialisée");go({name:"home"})}
+};
+let REC=null;
+function normalize(){const d=defaultState();S.equip=Object.assign({},d.equip,S.equip||{});S.settings=Object.assign({},d.settings,S.settings||{});
+  ["bg_lilac","lt_navy","sh_white"].forEach(id=>{if(!S.owned.includes(id))S.owned.push(id)});if(!S.start)S.start=today();if(!S.done)S.done={};
+  Object.keys(S.themes).forEach(k=>{const t=S.themes[k];if(t&&t.openedAt===undefined)t.openedAt=null});
+  /* migration v1 : une épreuve déjà médaillée est considérée comme ouverte */
+  for(let i=0;i<TH.length;i++){const t=ts(i);if(!t.openedAt&&(t.tries>0||t.medal>0))t.openedAt=addDays(today(),-MIN_DAYS)}
+  if(!S.earned||typeof S.earned!=="object")S.earned={};const lim=addDays(today(),-14);Object.keys(S.earned).forEach(k=>{if(k<lim)delete S.earned[k]});
+  refreshUnlocks();if(!S.backupCode)S.backupCode=genCode()}
+document.getElementById("importFile").addEventListener("change",e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const z=JSON.parse(r.result);const st=parseState(z.state||z);if(!st)throw 0;adopt(st,"import");toast("Progression restaurée");go({name:"home"})}catch(err){toast("Fichier non valide")}};r.readAsText(f);e.target.value=""});
+document.getElementById("app").addEventListener("click",e=>{const el=e.target.closest("[data-a]");if(!el||el.disabled)return;const f=A[el.dataset.a];if(f)f(el.dataset,el)});
+document.getElementById("app").addEventListener("keydown",e=>{if(e.key==="Enter"&&e.target.tagName==="INPUT"){const m={nm:"setName",gateIn:"gateCheck",pn:"rename",rc:"restoreGo",pin2:"pinSet"}[e.target.id];if(m)A[m]({})}
+  if((e.key==="Enter"||e.key===" ")&&e.target.classList.contains("gloss")){e.preventDefault();e.target.click()}});
+/* temps actif réel : les interactions espacées de moins de 90 s comptent, plus l'écoute des épisodes */
+document.addEventListener("pointerdown",()=>{const n=Date.now();if(lastAct&&n-lastAct<90000)addTime((n-lastAct)/1000);lastAct=n},true);
+document.addEventListener("visibilitychange",()=>{if(document.hidden){epAudioStop();writeLocal();stopSpeech();if(cloudOn()){clearTimeout(pushT);cloudPush()}}});
+window.addEventListener("online",()=>schedulePush());
+async function boot(){try{render()}catch(e){window.__showErr&&window.__showErr(e.message);return}await idbOpen();
+  const fromIdb=parseState(await idbGet());const fromLs=load();
+  /* on garde la copie la plus avancée (en cas d'égalité, la plus récente) */
+  const pa=prog(fromIdb),pb=prog(fromLs);
+  if(fromIdb&&(pa>pb||(pa===pb&&(fromIdb.updatedAt||"")>(fromLs&&fromLs.updatedAt||""))))S=fromIdb;else if(fromLs)S=fromLs;
+  normalize();writeLocal();
+  try{if(navigator.storage&&navigator.storage.persist)navigator.storage.persist()}catch(e){}
+  V={name:S.name?"home":"onboard"};dailySnap();writeLocal();render();
+  /* si une copie en ligne plus avancée existe (autre téléphone, données effacées), on la reprend automatiquement */
+  if(cloudOn()&&navigator.onLine&&S.backupCode){try{const remote=await cloudGet(S.backupCode);lastCheck=Date.now();
+    if(remote&&prog(remote)>prog(S)&&(remote.updatedAt||"")>(S.resetAt||"")){const code=S.backupCode,pin=S.pin;safetySnap("synchro");S=remote;S.backupCode=code;if(!S.pin)S.pin=pin;normalize();writeLocal();
+      if(["home","onboard"].includes(V.name)){V={name:S.name?"home":"onboard"};render()}toast("Progression mise à jour depuis la sauvegarde en ligne")}}catch(e){}}
+  schedulePush()}
+boot().catch(e=>{window.__showErr&&window.__showErr(e&&e.message||String(e))});
+</script>
+</body>
+</html>
