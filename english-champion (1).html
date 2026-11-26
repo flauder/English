@@ -160,8 +160,8 @@ const PACKS=[
 ["timetable","l'emploi du temps","Look at my timetable.","Regarde mon emploi du temps."],
 ["homework","les devoirs","I do my homework after dinner.","Je fais mes devoirs après le dîner."],
 ["break","la récréation","We play at break.","Nous jouons à la récré."],
-["subject","la matière","My favourite subject is PE.","Ma matière préférée est l'EPS."],
-["PE","l'EPS","We have PE on Tuesdays.","Nous avons EPS le mardi."],
+["subject","la matière","My favourite subject is P.E.","Ma matière préférée est l'EPS."],
+["P.E.","l'EPS","We have P.E. on Tuesdays.","Nous avons EPS le mardi."],
 ["teacher","le professeur","Our teacher is funny.","Notre professeur est drôle."],
 ["pencil case","la trousse","My pencil case is full.","Ma trousse est pleine."],
 ["test","le contrôle","I have a test tomorrow.","J'ai un contrôle demain."],
@@ -951,6 +951,7 @@ const SHOP=[
    Une copie datée est gardée pour chaque jour d'utilisation (backups/CODE/days/AAAA-MM-JJ) et n'est jamais effacée par l'app.
    Une copie moins avancée n'écrase jamais une copie en ligne plus avancée (sauf restauration volontaire par le parent).
    PIN parent oublié : dans la console du navigateur, taper  S.pin=null;save()  */
+const APP_VERSION="2.6 du 26/11/2026";
 const CLOUD={projectId:"",apiKey:""};
 function cloudOn(){return !!(CLOUD.projectId&&CLOUD.apiKey)}
 
@@ -1001,7 +1002,7 @@ async function cloudPush(){if(!cloudOn()||!S.backupCode||!navigator.onLine)retur
     let r2={ok:true};if(!(S.resetAt&&S.resetAt.slice(0,10)===new Date().toISOString().slice(0,10)))r2=await fetch(docUrl(S.backupCode,today()),{method:"PATCH",headers:{"Content-Type":"application/json"},body});
     if(r.ok&&r2.ok){S.cloudAt=new Date().toISOString();writeLocal();return true}}catch(e){}return false}
 async function cloudGet(code,day){const r=await fetch(docUrl(code,day));if(!r.ok)return null;const j=await r.json();return parseState(j&&j.fields&&j.fields.data&&j.fields.data.stringValue)}
-function adopt(st,op){const code=S.backupCode,pin=S.pin;safetySnap(op);S=st;S.backupCode=code||st.backupCode;if(!S.pin)S.pin=pin;normalize();S.resetAt=new Date().toISOString();save();if(cloudOn()){clearTimeout(pushT);cloudPush()}}
+function adopt(st,op){const code=S.backupCode,pin=S.pin,name=S.name;safetySnap(op);S=st;S.backupCode=code||st.backupCode;if(!S.pin)S.pin=pin;normalize();if(!S.name)S.name=name;S.resetAt=new Date().toISOString();save();if(cloudOn()){clearTimeout(pushT);cloudPush()}}
 function hasProgress(){return Object.keys(S.words).length>0}
 function needExport(){if(cloudOn()||!hasProgress())return false;if(!S.lastExport)return Object.keys(S.act).length>=3;return addDays(S.lastExport.slice(0,10),7)<=today()}
 let S=load()||defaultState();
@@ -1032,9 +1033,10 @@ function pickVoice(){try{const vs=speechSynthesis.getVoices();VOICE=vs.find(v=>/
 if("speechSynthesis" in window){pickVoice();speechSynthesis.onvoiceschanged=pickVoice}
 function utter(t,slow){const u=new SpeechSynthesisUtterance(t);u.lang=VOICE?VOICE.lang:"en-GB";if(VOICE)u.voice=VOICE;u.rate=slow?0.65:0.9;return u}
 /* iPhone : la voix doit partir directement dans le geste (pas de délai), sinon Safari la bloque */
-function speak(t,slow){if(!("speechSynthesis" in window))return;try{speechSynthesis.cancel();speechSynthesis.speak(utter(t,slow))}catch(e){}}
-function speakSeq(parts,slow,onEnd){if(!("speechSynthesis" in window)){onEnd&&onEnd();return}try{speechSynthesis.cancel();parts.forEach((p,i)=>{const u=utter(p,slow);if(i===parts.length-1)u.onend=onEnd;speechSynthesis.speak(u)})}catch(e){onEnd&&onEnd()}}
-function stopSpeech(){if("speechSynthesis" in window)speechSynthesis.cancel()}
+function hush(){try{if(speechSynthesis.speaking||speechSynthesis.pending)speechSynthesis.cancel()}catch(e){}}
+function speak(t,slow){if(!("speechSynthesis" in window))return;try{hush();speechSynthesis.speak(utter(t,slow))}catch(e){}}
+function speakSeq(parts,slow,onEnd){if(!("speechSynthesis" in window)){onEnd&&onEnd();return}try{hush();parts.forEach((p,i)=>{const u=utter(p,slow);if(i===parts.length-1)u.onend=onEnd;speechSynthesis.speak(u)})}catch(e){onEnd&&onEnd()}}
+function stopSpeech(){if("speechSynthesis" in window)hush()}
 const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
 function micOk(){return !!SR&&S.settings.mic!==false}
 const NUM={"0":"zero","1":"one","2":"two","3":"three","4":"four","5":"five","6":"six","7":"seven","8":"eight","9":"nine","10":"ten","11":"eleven","12":"twelve","15":"fifteen","20":"twenty"};
@@ -1099,7 +1101,8 @@ function packOpen(pi){return pi<packsOpen()}
 function packStats(pi){const l=WORDS.filter(w=>w.pack===pi);return {total:l.length,seen:l.filter(w=>isSeen(w.id)).length,learnt:l.filter(w=>isLearnt(w.id)).length}}
 function nextPack(){for(let i=0;i<packsOpen();i++)if(packStats(i).seen<PACKS[i].words.length)return i;return -1}
 function gradeWord(w,ok){const x=ws(w.id);const t=today();if(!x.seen){x.seen=true;x.seenOn=t}
-  if(ok){x.right++;x.box=Math.min(5,(x.box||0)+((x.known&&x.box<2)?2:1));if(x.box>=2&&!x.learntOn)x.learntOn=t}else{x.wrong++;x.lastWrong=t;x.box=Math.max(0,(x.box||0)-2)}
+  /* un mot ne monte que d'un niveau par jour : « appris » (niveau 2) = réussi 2 jours différents, « maîtrisé » (niveau 4) = réussi 4 jours différents */
+  if(ok){x.right++;if(x.lastUp!==t){x.box=Math.min(5,(x.box||0)+1);x.lastUp=t}if(x.box>=2&&!x.learntOn)x.learntOn=t}else{x.wrong++;x.lastWrong=t;x.box=Math.max(0,(x.box||0)-2)}
   x.due=addDays(t,INTERVALS[x.box])}
 
 /* ===== ÉPREUVES (déblocage étalé dans le temps) ===== */
@@ -1193,7 +1196,7 @@ function ensureDaily(){const t=today();if(S.daily&&S.daily.date===t)return S.dai
   S.daily={date:t,steps:steps.map(s=>Object.assign(s,{done:false})),complete:false};save();return S.daily}
 function startStep(k){const st=S.daily.steps[k];CTX={step:k,date:S.daily.date};
   if(st.type==="review")startReview(null);else if(st.type==="learn")startLearn(st.pack);else if(st.type==="practice")startPractice(st.ti,true);
-  else if(st.type==="episode")openEpisode(st.ep);else startSprint()}
+  else if(st.type==="episode"){if(S.eps[st.ep]&&S.eps[st.ep].done&&S.eps[st.ep].doneOn===today()){finishCtx();CTX=null;A.nextStep();return}openEpisode(st.ep)}else startSprint()}
 function weekCount(){const ws0=weekStart(today());let n=0;for(let i=0;i<7;i++)if(S.done[addDays(ws0,i)])n++;return n}
 function finishCtx(){if(!CTX)return;CTX.finished=true;const d=S.daily;if(!d||d.date!==CTX.date||d.date!==today()){save();return}if(d.steps[CTX.step])d.steps[CTX.step].done=true;
   if(!d.complete&&d.steps.every(s=>s.done)){d.complete=true;addCoins(20);bumpStreak();S.done[today()]=true;CTX.dayDone=true;
@@ -1237,6 +1240,8 @@ VIEWS.onboard=()=>`<div class="screen" style="justify-content:center;gap:20px">
   <label class="small muted" for="nm" style="font-weight:600">Comment tu t'appelles ?</label>
   <input id="nm" class="field" maxlength="20" autocomplete="off" placeholder="Ton prénom">
   <button class="btn violet" data-a="setName">C'est parti</button>
+  <button class="btn light" data-a="soundTest">Tester le son</button>
+  <div class="small muted" style="text-align:center">L'app parle anglais : monte le volume et coupe le mode silencieux.</div>
   <div style="display:flex;flex-direction:column;gap:4px;align-items:center">
   ${cloudOn()?`<button class="small" style="font-weight:600;color:var(--vink);padding:8px" data-a="go" data-v="restore">J'ai déjà un code de sauvegarde</button>`:""}
   <button class="small" style="font-weight:600;color:var(--vink);padding:8px" data-a="import">Restaurer un fichier de sauvegarde</button></div></div>`;
@@ -1250,7 +1255,8 @@ VIEWS.home=()=>{refreshUnlocks();const d=ensureDaily();const now=new Date().toLo
   const steps=d.steps.map((s,i)=>{const st=s.done?"done":i===k?"cur":"todo";return `<div class="step"><div class="dot ${st}">${s.done?ic("check",16,3):i+1}</div><div class="grow"><div style="font-weight:600;font-size:15px;${st==="todo"?"color:var(--muted)":""}">${esc(s.label)}</div><div class="small muted">${s.done?"Terminé":esc(s.sub)}</div></div></div>`}).join("");
   const note=S.unlockNote!=null?`<div class="card pop" style="background:var(--ink);color:#fff;border:0;flex-direction:row;align-items:center"><div style="color:#FFD27A">${ic("trophy",30)}</div><div class="grow"><div style="font-weight:700">${S.unlockNote===8?"Saison 2 : New York !":"Nouvelle épreuve débloquée"}</div><div class="small" style="color:#E4DEFF">Épreuve ${S.unlockNote+1} : ${esc(TH[S.unlockNote].title)}</div></div><button class="btn coral" style="width:auto" data-a="seeUnlock">Voir</button></div>`:"";
   return `<div class="screen withnav">
-  <div class="between"><div><div class="small muted" style="font-weight:500">${cap(now)}</div><h1 class="h1">Salut, ${esc(nameOr())} !</h1></div><div class="row" style="gap:6px"><div class="pill flame">${FLAME}${streakShown()}</div>${coinPill()}</div></div>
+  <div class="between"><div class="small muted" style="font-weight:500">${cap(now)}</div><div class="row" style="gap:6px"><div class="pill flame">${FLAME}${streakShown()}</div>${coinPill()}</div></div>
+  <h1 class="h1" style="margin-top:-6px;overflow-wrap:anywhere">Salut, ${esc(nameOr())}&nbsp;!</h1>
   ${note}
   <button class="card" data-a="go" data-v="season" style="background:${se===1?"var(--violet)":"#0E6E69"};color:#fff;border:0;text-align:left">
     <div class="between"><div class="small" style="font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:#E4DEFF">${se===1?"Saison 1 · Stage à Londres":"Saison 2 · New York"}</div><div class="small" style="font-weight:700">${passed} / ${TH.length} médailles</div></div>
@@ -1259,7 +1265,7 @@ VIEWS.home=()=>{refreshUnlocks();const d=ensureDaily();const now=new Date().toLo
     <div class="small" style="color:#E4DEFF">${esc(TH[ti].gram)} · voir toutes les épreuves</div></button>
   <div class="card"><div class="between"><div class="h2">Séance du jour</div><div class="small muted">~10 min · 3 étapes</div></div>${steps}
     ${k>=0?`<button class="btn dark" data-a="step" data-v="${k}">${k===0?"Commencer":"Continuer"}</button>`:`<div class="feedback ok" style="animation:none"><div class="t">Séance terminée, bravo !</div><div>Reviens demain pour garder ta série. En attendant, tente un sprint.</div></div>`}</div>
-  <div class="card" style="gap:10px"><div class="between"><div class="row" style="gap:8px;color:var(--gold)">${ic("trophy",22)}<span class="h2" style="color:var(--ink)">Défi de la semaine</span></div><b>${Math.min(wc,WEEK_GOAL)} / ${WEEK_GOAL}</b></div>
+  <div class="card" style="gap:10px"><div class="between"><div class="row" style="gap:8px;color:var(--gold)">${ic("trophy",22)}<span class="h2" style="color:var(--ink)">Défi de la semaine</span></div><b style="white-space:nowrap">${Math.min(wc,WEEK_GOAL)} / ${WEEK_GOAL}</b></div>
     <div class="bar"><i style="width:${Math.round(Math.min(wc,WEEK_GOAL)/WEEK_GOAL*100)}%;background:var(--gold)"></i></div>
     <div class="small muted">${S.weekClaimed===weekStart(today())?"Défi réussi cette semaine ! ":""}${WEEK_GOAL} séances complètes dans la semaine = 100 pièces.${nx?" Article exclusif « "+esc(nx.name)+" » à "+nx.lock.weeks+" défi"+(nx.lock.weeks>1?"s":"")+" ("+(S.weeks||0)+" réussi"+((S.weeks||0)>1?"s":"")+").":""}</div></div>
   <div class="grid2">
@@ -1323,7 +1329,7 @@ VIEWS.run=()=>{const it=cur();const dk=RUN.dark;let body="";const rv=it.review?`
   else if(it.k==="listenOrder")body=`<div class="row" style="justify-content:space-between"><div class="eyebrow">Écoute · remets les mots dans l'ordre</div>${rv}</div><div class="row" style="justify-content:center;gap:10px"><button class="sound" style="width:72px;height:72px;border-radius:24px" data-a="say" data-t="${esc(it.s.plain)}" aria-label="Réécouter">${ic("sound",32)}</button><button class="iconbtn" style="width:56px;height:56px;border-radius:18px;font-weight:700;font-size:13px" data-a="saySlow" data-t="${esc(it.s.plain)}" aria-label="Lentement">0,6x</button></div><div class="small" style="text-align:center;color:#B9B1E8">Pas de texte : fie-toi à ton oreille.</div>${tileArea(it,false)}${RUN.answered?"":`<div class="grid2"><button class="btn light" data-a="clearTiles">Effacer</button><button class="btn coral" data-a="check" ${it.ans.length?"":"disabled"}>Vérifier</button></div>`}`;
   else if(it.k==="speak")body=`<div class="row" style="justify-content:space-between"><div class="eyebrow">Répète après moi</div>${rv}</div><div class="card" style="background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.12);color:#fff"><div class="row"><button class="sound sm" data-a="say" data-t="${esc(it.s.plain)}" aria-label="Écouter le modèle">${ic("sound",20)}</button><div class="sentence" style="font-size:20px">${esc(it.s.plain)}</div></div><div style="font-size:15px;color:#B9B1E8">${esc(it.s.fr)}</div></div>
     ${RUN.answered?"":`<div style="display:flex;flex-direction:column;align-items:center;gap:10px;padding:6px 0"><button class="sound" style="width:96px;height:96px;border-radius:99px;background:${it.listening?"var(--coral)":"var(--violet)"}" data-a="micStart" aria-label="Parler" ${it.listening?"disabled":""}>${ic("mic",40)}</button><div style="color:#E4DEFF;font-weight:600">${it.listening?"Je t'écoute…":"Touche le micro et lis la phrase à voix haute"}</div>
-    ${it.heard?`<div class="small" style="color:#FFB4A3;text-align:center">J'ai entendu : « ${esc(it.heard)} ». Réessaie (${it.tries}/3).</div>`:""}${it.err?`<div class="small" style="color:#FFB4A3;text-align:center">${esc(it.err)}</div>`:""}
+    ${it.heard?`<div class="small" style="color:#FFB4A3;text-align:center">J'ai entendu : « ${esc(it.heard)} ». Réessaie (${it.tries}/3).</div>`:""}${it.err?`<div class="small" style="color:#FFB4A3;text-align:center">${esc(it.err)}</div><button class="btn light" data-a="micOff">Désactiver l'oral sur ce téléphone</button>`:""}
     <button class="small" style="color:#B9B1E8;padding:8px;text-decoration:underline" data-a="skipSpeak">Passer (pas de micro maintenant)</button></div>`}`;
   let fb="";if(RUN.answered){const corr=answerText(it);
     const extra=it.w?`<div><b>${esc(it.w.en)}</b> · ${esc(it.w.fr)}<br><span style="opacity:.85">${esc(it.w.exEn)}</span></div>`:it.k==="speak"?(it.heard?`<div>J'ai entendu : « ${esc(it.heard)} »</div>`:""):`${it.k==="listenOrder"?`<div>${esc(it.s.fr)}</div>`:""}${!RUN.ok?`<div>${ic("bulb",16)} ${esc(TH[it.ti].rule)}</div>`:""}`;
@@ -1419,25 +1425,29 @@ VIEWS.parent=()=>{const days=[];for(let i=13;i>=0;i--)days.push(addDays(today(),
   const hard=WORDS.filter(w=>S.words[w.id]&&S.words[w.id].wrong>0&&S.words[w.id].box<3).sort((a,b)=>S.words[b.id].wrong-S.words[a.id].wrong).slice(0,6);
   const w0=weekStart(today());const wk=[0,1,2,3,4,5,6].map(i=>addDays(w0,i));const wMin=Math.round(wk.reduce((a,d)=>a+(S.time[d]||0),0)/60);
   const wSess=wk.filter(d=>S.done[d]).length;const wNew=WORDS.filter(w=>{const x=S.words[w.id];return x&&x.learntOn&&x.learntOn>=w0}).length;const wMed=TH.filter((t,i)=>ts(i).medalOn&&ts(i).medalOn>=w0).length;
+  const p0=addDays(w0,-7);const pk=[0,1,2,3,4,5,6].map(i=>addDays(p0,i));const pMin=Math.round(pk.reduce((a,d)=>a+(S.time[d]||0),0)/60);const pSess=pk.filter(d=>S.done[d]).length;
+  const pNew=WORDS.filter(w=>{const x=S.words[w.id];return x&&x.learntOn&&x.learntOn>=p0&&x.learntOn<w0}).length;const pMed=TH.filter((t,i)=>ts(i).medalOn&&ts(i).medalOn>=p0&&ts(i).medalOn<w0).length;
+  const cmp=(a,b)=>`<div class="small" style="color:${a>b?"#7EE2A8":a<b?"#FFB4A3":"#B9B1E8"}">${a>b?"en hausse":a<b?"en baisse":"stable"} · sem. dernière : ${b}</div>`;
   return `<div class="screen">${topBar("home","Espace parent","Suivi de progression")}
   <div class="card" style="background:var(--ink);color:#fff;border:0"><div class="h2">Cette semaine</div><div class="grid2" style="gap:12px">
-    <div><div style="font-size:24px;font-weight:800">${wMin} min</div><div class="small" style="color:#B9B1E8">d'entraînement actif</div></div>
-    <div><div style="font-size:24px;font-weight:800">${wSess} / 7</div><div class="small" style="color:#B9B1E8">séances complètes</div></div>
-    <div><div style="font-size:24px;font-weight:800">${wNew}</div><div class="small" style="color:#B9B1E8">mots appris</div></div>
-    <div><div style="font-size:24px;font-weight:800">${wMed}</div><div class="small" style="color:#B9B1E8">médailles gagnées</div></div></div>
+    <div><div style="font-size:24px;font-weight:800">${wMin} min</div><div class="small" style="color:#B9B1E8">d'activité (estimation)</div>${cmp(wMin,pMin)}</div>
+    <div><div style="font-size:24px;font-weight:800">${wSess} / 7</div><div class="small" style="color:#B9B1E8">séances complètes</div>${cmp(wSess,pSess)}</div>
+    <div><div style="font-size:24px;font-weight:800">${wNew}</div><div class="small" style="color:#B9B1E8">mots appris</div>${cmp(wNew,pNew)}</div>
+    <div><div style="font-size:24px;font-weight:800">${wMed}</div><div class="small" style="color:#B9B1E8">médailles gagnées</div>${cmp(wMed,pMed)}</div></div>
     <div class="small" style="color:#E4DEFF">Épreuve en cours : ${currentTheme()+1}. ${esc(TH[currentTheme()].gram)} · défis réussis : ${S.weeks||0}</div></div>
-  <div class="card"><div class="h2">Temps d'entraînement</div><div class="small muted">Minutes actives par jour sur 14 jours. Seules les interactions espacées de moins de 90 s et l'écoute des épisodes sont comptées.</div>
+  <div class="card"><div class="h2">Temps d'activité estimé</div><div class="small muted">Minutes par jour sur 14 jours. Estimation : les moments où elle touche l'écran à moins de 90 s d'intervalle, plus l'écoute des épisodes.</div>
   <div class="bars14">${mins.map((m,i)=>`<div class="${m?"":"zero"}" style="height:${Math.max(3,Math.round(m/mx*86))}px" title="${days[i]} : ${m} min"></div>`).join("")}</div>
   <div class="between small muted"><span>${days[0].slice(8)}/${days[0].slice(5,7)}</span><span>Aujourd'hui</span></div>
   <div class="grid3" style="text-align:center"><div><div style="font-size:22px;font-weight:800">${total}</div><div class="small muted">min au total</div></div><div><div style="font-size:22px;font-weight:800">${Object.keys(S.act).length}</div><div class="small muted">jours actifs</div></div><div><div style="font-size:22px;font-weight:800">${streakShown()}</div><div class="small muted">jours de série</div></div></div></div>
-  <div class="card"><div class="h2">Vocabulaire</div><div>${seen} mots vus sur ${WORDS.length}, ${learnt} appris (réussis deux jours différents), ${mast} maîtrisés (réussis 4 fois d'affilée, espacés). ${dueWords().length} à revoir aujourd'hui.</div>
+  <div class="card"><div class="h2">Vocabulaire</div><div>${seen} mots vus sur ${WORDS.length}, ${learnt} appris (réussis au moins 2 jours différents), ${mast} maîtrisés (réussis au moins 4 jours différents, en révisions espacées). ${dueWords().length} à revoir aujourd'hui.</div>
   ${hard.length?`<div class="small muted" style="font-weight:600">Mots qui résistent</div>${hard.map(w=>`<div class="between small"><span><b>${esc(w.en)}</b> · ${esc(w.fr)}</span><span class="muted">${S.words[w.id].wrong} erreur(s)</span></div>`).join("")}`:""}</div>
   <div class="card"><div class="h2">Épreuves de grammaire</div>${TH.map((t,i)=>{const x=ts(i);return `<div class="between small"><span>${i+1}. ${esc(t.gram)}</span><span style="font-weight:700">${x.tries?fr1(x.best)+"/10 · "+MEDAL_NAME[x.medal]:themeOpen(i)?"ouverte":"—"}</span></div>`}).join("")}
   <div class="small muted">Épisodes écoutés : ${Object.values(S.eps).filter(e=>e&&e.done).length} / ${EPISODES.length}. Rythme : une nouvelle épreuve au plus tôt tous les ${MIN_DAYS} jours.</div></div>
   <div class="card"><div class="h2">Réglages</div><input id="pn" class="field" maxlength="20" value="${esc(S.name)}"><button class="btn light" data-a="rename">Enregistrer le prénom</button>
   <button class="btn light" data-a="toggleMic">Exercice « Répète après moi » : ${S.settings.mic!==false?"activé":"désactivé"}</button>
   <div class="small muted">L'oral utilise la reconnaissance vocale de Chrome : il faut une connexion internet et autoriser le micro. ${SR?"":"Ce navigateur ne la propose pas."}</div>
-  <button class="btn light" data-a="pinReset">Changer le code parent</button></div>
+  <button class="btn light" data-a="soundTest">Tester la voix anglaise</button>
+  <button class="btn light" data-a="pinReset">Changer le code parent</button><div class="small muted">Version ${APP_VERSION}</div></div>
   <div class="card"><div class="h2">Sauvegarde et historique</div>
   ${cloudOn()?`<div>Code de sauvegarde : <b style="letter-spacing:.06em;font-size:18px">${esc(S.backupCode||"")}</b></div><div class="small muted">Garde ce code hors du téléphone (envoie-le-toi) : il suffit pour tout récupérer sur un nouveau téléphone. ${S.cloudAt?"Dernière sauvegarde en ligne : "+new Date(S.cloudAt).toLocaleString("fr-FR",{dateStyle:"short",timeStyle:"short"})+".":"Pas encore sauvegardé en ligne."} Une copie datée est gardée en ligne pour chaque jour d'utilisation.</div>
   ${S.cloudAhead?`<div class="feedback ko" style="animation:none"><div>Une version plus avancée existe en ligne (autre téléphone ?). Elle n'a pas été écrasée.</div><button class="btn dark" data-a="cloudAheadGo">Récupérer la version en ligne</button></div>`:""}
@@ -1479,6 +1489,8 @@ clearTiles:()=>{cur().ans=[];render()},
 check:()=>{const it=cur();const got=it.ans.map(id=>it.bank.find(t=>t.id===id).t);
   if(it.k==="spell")answer(got.join("")===it.w.en.toLowerCase(),null);else answer(got.join(" ")===it.words.join(" "),null)},
 next:()=>nextItem(),
+micOff:()=>{S.settings.mic=false;save();toast("Oral désactivé (réactivable dans l'espace parent)");A.skipSpeak()},
+soundTest:()=>{speak("Hello! Welcome to English Champion.");toast("Tu dois entendre une voix anglaise. Sinon : monte le volume et coupe le mode silencieux.")},
 skipSpeak:()=>{if(REC){try{REC.abort()}catch(e){}REC=null}skipItem()},
 micStart:()=>{const it=cur();if(!SR){toast("Micro non disponible sur ce navigateur");return}stopSpeech();
   /* iPhone : résultats intermédiaires activés et arrêt forcé au bout de 7 s, sinon Safari peut ne rien renvoyer */
@@ -1507,7 +1519,7 @@ epQuiz:()=>{epAudioStop();stopSpeech();EP.phase="quiz";EP.ans=null;render()},
 epBack:()=>{EP.phase="read";EP.show=true;render()},
 epAns:d=>{const q=EPISODES[EP.i].q[EP.qi];EP.ans=d.v==="1";if(EP.ans===q[1])EP.score++;markAct();render()},
 epNext:()=>{EP.qi++;EP.ans=null;if(EP.qi<EPISODES[EP.i].q.length){render();return}
-  const i=EP.i,sc=EP.score,n=EPISODES[i].q.length;const first=!(S.eps[i]&&S.eps[i].done);const prev=S.eps[i]||{best:0};S.eps[i]={done:true,best:Math.max(prev.best||0,sc)};
+  const i=EP.i,sc=EP.score,n=EPISODES[i].q.length;const first=!(S.eps[i]&&S.eps[i].done);const prev=S.eps[i]||{best:0};S.eps[i]={done:true,best:Math.max(prev.best||0,sc),doneOn:prev.doneOn&&!first?prev.doneOn:today()};
   let coins;if(first){coins=30+sc*5;addCoins(coins)}else coins=earn(sc);EP=null;save();finishCtx();
   showResult({title:"Épisode terminé",big:sc+" / "+n,sub:EPISODES[i].title,coins,lines:sc<n?["Tu peux réécouter l'épisode depuis l'onglet Histoire."]:[]})},
 quitEp:()=>{epAudioStop();stopSpeech();EP=null;CTX=null;save();go({name:"stories"})},
@@ -1536,13 +1548,35 @@ pushNow:async()=>{lastCheck=0;toast("Sauvegarde en cours…");const ok=await clo
 restoreGo:async()=>{const c=cleanCode(document.getElementById("rc").value);if(c.length!==12){toast("Le code fait 12 caractères");return}V.busy=true;render();
   let st=null;try{st=await cloudGet(c)}catch(e){}V.busy=false;if(!st){toast("Code introuvable ou pas de connexion");render();return}
   safetySnap("récupération");const pin=S.pin;S=st;S.backupCode=c.slice(0,4)+"-"+c.slice(4,8)+"-"+c.slice(8);if(!S.pin)S.pin=pin;normalize();writeLocal();toast("Progression récupérée");go({name:"home"})},
-export:()=>{S.lastExport=new Date().toISOString();save();const b=new Blob([JSON.stringify({app:"english-champion",exported:new Date().toISOString(),state:S},null,1)],{type:"application/json"});const a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="english-champion-"+today()+".json";document.body.appendChild(a);a.click();a.remove();if(V.name==="home")render()},
+export:async()=>{const name="english-champion-"+today()+".json";const txt=JSON.stringify({app:"english-champion",exported:new Date().toISOString(),state:S},null,1);
+  try{const f=new File([txt],name,{type:"application/json"});if(navigator.canShare&&navigator.canShare({files:[f]})){await navigator.share({files:[f],title:"Sauvegarde English Champion"});S.lastExport=new Date().toISOString();save();toast("Sauvegarde partagée");if(V.name==="home")render();return}}catch(e){if(e&&e.name==="AbortError")return}
+  try{const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([txt],{type:"application/json"}));a.download=name;document.body.appendChild(a);a.click();a.remove();S.lastExport=new Date().toISOString();save();toast("Fichier de sauvegarde enregistré")}catch(e){toast("Export impossible sur ce téléphone")}if(V.name==="home")render()},
 import:()=>document.getElementById("importFile").click(),
 resetAsk:()=>{V.confirm=true;render()},
 resetYes:()=>{safetySnap("réinitialisation");const n=S.name,c=S.backupCode,p=S.pin;S=defaultState();S.resetAt=new Date().toISOString();S.name=n;S.backupCode=c;S.pin=p;normalize();save();try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){};if(cloudOn()){clearTimeout(pushT);cloudPush()}toast("Progression réinitialisée");go({name:"home"})}
 };
 let REC=null;
-function normalize(){const d=defaultState();S.equip=Object.assign({},d.equip,S.equip||{});S.settings=Object.assign({},d.settings,S.settings||{});
+/* remet d'aplomb une sauvegarde (import, ancienne version, fichier abîmé) : tout ce qui est invalide est remplacé par une valeur sûre */
+function sanitize(){const d=defaultState();const obj=v=>v&&typeof v==="object"&&!Array.isArray(v);const num=(v,def,min,max)=>{v=Number(v);if(!isFinite(v))v=def;if(min!=null)v=Math.max(min,v);if(max!=null)v=Math.min(max,v);return v};
+  const day=v=>typeof v==="string"&&/^\d{4}-\d{2}-\d{2}$/.test(v)?v:null;
+  ["words","themes","eps","time","act","done","earned"].forEach(k=>{if(!obj(S[k]))S[k]={}});
+  if(!obj(S.settings))S.settings={};if(!obj(S.equip))S.equip={};if(!Array.isArray(S.owned))S.owned=[];
+  S.name=typeof S.name==="string"?S.name.slice(0,20):"";S.coins=num(S.coins,0,0);S.streak=num(S.streak,0,0);S.sprintBest=num(S.sprintBest,0,0);S.weeks=num(S.weeks,0,0);
+  ["updatedAt","resetAt","lastExport","cloudAt","weekClaimed","lastSnap"].forEach(k=>{if(typeof S[k]!=="string")S[k]=null});if(typeof S.backupCode!=="string"||cleanCode(S.backupCode).length!==12)S.backupCode=null;
+  S.streakDay=day(S.streakDay);S.start=day(S.start);S.pin=typeof S.pin==="string"&&/^\d{4,6}$/.test(S.pin)?S.pin:null;
+  Object.keys(S.words).forEach(id=>{const x=S.words[id];if(!WBY[id]||!obj(x)){delete S.words[id];return}
+    x.box=Math.round(num(x.box,0,0,5));x.right=num(x.right,0,0);x.wrong=num(x.wrong,0,0);x.seen=!!x.seen;x.due=day(x.due)||(x.seen?today():null);x.learntOn=day(x.learntOn);x.lastUp=day(x.lastUp)});
+  Object.keys(S.themes).forEach(k=>{const t=S.themes[k];const i=+k;if(!(i>=0&&i<TH.length&&Number.isInteger(i))||!obj(t)){delete S.themes[k];return}
+    t.best=num(t.best,0,0,10);t.medal=Math.round(num(t.medal,0,0,3));t.tries=num(t.tries,0,0);t.openedAt=day(t.openedAt);t.medalOn=day(t.medalOn)});
+  Object.keys(S.eps).forEach(k=>{const e=S.eps[k];const i=+k;if(!(i>=0&&i<EPISODES.length)||!obj(e)){delete S.eps[k];return}e.done=!!e.done;e.best=num(e.best,0,0,3)});
+  ["time","act","earned"].forEach(k=>Object.keys(S[k]).forEach(x=>{if(!day(x))delete S[k][x];else S[k][x]=num(S[k][x],0,0)}));
+  Object.keys(S.done).forEach(x=>{if(!day(x))delete S.done[x]});
+  S.owned=S.owned.filter((id,i,a)=>typeof id==="string"&&shopItem(id)&&a.indexOf(id)===i);
+  ["leotard","shoes","acc","bg"].forEach(c=>{const v=S.equip[c];const it=v?shopItem(v):null;if(!it||it.cat!==c||!S.owned.includes(v))S.equip[c]=c==="acc"?null:d.equip[c]});
+  const okStep=st=>obj(st)&&["review","learn","practice","episode","sprint"].includes(st.type)&&typeof st.label==="string"&&(st.type!=="learn"||(st.pack>=0&&st.pack<PACKS.length))&&(st.type!=="practice"||(st.ti>=0&&st.ti<TH.length))&&(st.type!=="episode"||(st.ep>=0&&st.ep<EPISODES.length));
+  if(!obj(S.daily)||!Array.isArray(S.daily.steps)||!day(S.daily.date)||!S.daily.steps.every(okStep))S.daily=null;
+  if(S.unlockNote!=null&&!(S.unlockNote>=1&&S.unlockNote<TH.length))S.unlockNote=null}
+function normalize(){const d=defaultState();sanitize();S.equip=Object.assign({},d.equip,S.equip||{});S.settings=Object.assign({},d.settings,S.settings||{});
   ["bg_lilac","lt_navy","sh_white"].forEach(id=>{if(!S.owned.includes(id))S.owned.push(id)});if(!S.start)S.start=today();if(!S.done)S.done={};
   Object.keys(S.themes).forEach(k=>{const t=S.themes[k];if(t&&t.openedAt===undefined)t.openedAt=null});
   /* migration v1 : une épreuve déjà médaillée est considérée comme ouverte */
